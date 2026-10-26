@@ -1,0 +1,162 @@
+/* Cognizance team marquee — all rules are contained to this component. */
+.cognizance-ribbons-wrapper {
+  --cognizance-ribbon-height: 74px;
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 260px;
+  overflow: hidden;
+  background: #f6f3e9;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbons-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon {
+  position: absolute;
+  top: var(--ribbon-top);
+  left: 0;
+  display: flex;
+  align-items: center;
+  width: 115%;
+  height: var(--cognizance-ribbon-height);
+  margin-left: -7.5%;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, .14);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .35);
+  white-space: nowrap;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon--khurasan {
+  --ribbon-top: 18%;
+  z-index: 3;
+  transform: rotate(-4deg);
+  background: linear-gradient(105deg, #b91c1c 0%, #ef4444 100%);
+  color: #fff;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon--asqalan {
+  --ribbon-top: 40%;
+  z-index: 2;
+  transform: rotate(2.5deg);
+  border-color: rgba(15, 23, 42, .2);
+  background: linear-gradient(105deg, #fff 0%, #f8fafc 100%);
+  color: #0f172a;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon--thafthazan {
+  --ribbon-top: 62%;
+  z-index: 1;
+  transform: rotate(-2deg);
+  background: linear-gradient(105deg, #1d4ed8 0%, #3b82f6 100%);
+  color: #fff;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon-track {
+  display: flex;
+  flex: 0 0 auto;
+  width: max-content;
+  height: 100%;
+  animation: cognizance-ribbon-left 18s linear infinite;
+  will-change: transform;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon--asqalan .cognizance-ribbon-track {
+  animation-name: cognizance-ribbon-right;
+  animation-duration: 24s;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon--thafthazan .cognizance-ribbon-track {
+  animation-duration: 21s;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon-group {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  width: max-content;
+  height: 100%;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon-item {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 17px;
+  height: 100%;
+  padding: 0 20px;
+  font-family: 'Manrope', 'DM Sans', sans-serif;
+  font-size: clamp(14px, 1.15vw, 17px);
+  font-weight: 750;
+  letter-spacing: .09em;
+  line-height: 1;
+}
+.cognizance-ribbons-wrapper .cognizance-ribbon-identity {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 9px;
+}
+.cognizance-ribbons-wrapper .cognizance-logo {
+  display: block;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+.cognizance-ribbons-wrapper .cognizance-brand-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: .76em;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.cognizance-ribbons-wrapper .cognizance-separator {
+  font-size: 1.2em;
+  opacity: .75;
+}
+.cognizance-ribbons-wrapper .cognizance-team {
+  font-weight: 800;
+  letter-spacing: .13em;
+}
+.cognizance-ribbons-wrapper .cognizance-spark {
+  font-size: 1.22em;
+  opacity: .92;
+}
+@keyframes cognizance-ribbon-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes cognizance-ribbon-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@media (max-width: 600px) {
+  .cognizance-ribbons-wrapper {
+    --cognizance-ribbon-height: 66px;
+    min-height: 230px;
+  }
+  .cognizance-ribbons-wrapper .cognizance-ribbon-item {
+    gap: 13px;
+    padding-inline: 14px;
+    font-size: 14px;
+  }
+  .cognizance-ribbons-wrapper .cognizance-logo {
+    width: 24px;
+    height: 24px;
+  }
+  .cognizance-ribbons-wrapper .cognizance-brand-pill {
+    min-height: 31px;
+    padding-inline: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cognizance-ribbons-wrapper .cognizance-ribbon-track {
+    animation: none;
+    transform: translateX(0);
+    will-change: auto;
+  }
+}
