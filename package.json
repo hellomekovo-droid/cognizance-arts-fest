@@ -1,0 +1,17 @@
+{
+  "name": "cognizance",
+  "version": "1.0.0",
+  "description": "Cognizance Arts Fest - Official Website",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve -l 5500 .",
+    "start": "npx serve -l 5500 .",
+    "serve": "npx serve -l 5500 ."
+  },
+  "keywords": [
+    "cognizance",
+    "arts-fest"
+  ],
+  "author": "",
+  "license": "ISC"
+}

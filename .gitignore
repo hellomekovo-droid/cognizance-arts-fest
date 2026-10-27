@@ -1,0 +1,22 @@
+node_modules/
+.npm/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# Scratch and intermediate experiment files
+lantern-checker.jpg
+lantern-clean.png
+lantern-cream.png
+lantern-cutout.png
+lantern-raw.png
+lantern-source.png
+lantern-transparent.png
+lantern.png
+lamp.png
+hero-bg-composite.png
+hero-bg-desktop.png
+hero-bg-mobile.png
