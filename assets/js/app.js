@@ -16,36 +16,7 @@ $('#clear-program').addEventListener('click', () => {$('#program-search').value 
 $('#result-search').addEventListener('input', event => {const searching = event.target.value.trim().length > 0; $('#result-message').textContent = searching ? 'No official results are available to search yet.' : 'Their moment is worth waiting for.'; $('#result-detail').textContent = searching ? 'The row above is a labeled placeholder, not a published result. Verified results will be searchable once approved.' : 'Verified results will appear here once approved by the organizing team.';});
 let galleryFilter = 'all';
 $$('[data-gallery]').forEach(button => button.addEventListener('click', () => {galleryFilter = button.dataset.gallery; $$('[data-gallery]').forEach(item => {const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected));}); let count = 0; $$('.photo-tile').forEach(tile => {tile.hidden = galleryFilter !== 'all' && tile.dataset.category !== galleryFilter; if (!tile.hidden) count++;}); $('#photo-count').textContent = `${count} sample photo space${count === 1 ? '' : 's'}`;}));
-const motion = $('#motion-toggle');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-let paused = false;
-try { paused = sessionStorage.getItem('cognizance-motion-paused') === 'true'; } catch {}
-function applyMotion() {
-  const systemReduced = reduced.matches;
-  const shouldPause = systemReduced || paused;
-  document.documentElement.classList.toggle('no-motion', shouldPause);
-  if (motion) {
-    motion.disabled = systemReduced;
-    motion.setAttribute('aria-pressed', String(shouldPause));
-    motion.textContent = systemReduced ? 'Motion off · device setting' : (paused ? 'Decorative motion off' : 'Pause decorative motion');
-    if (systemReduced) motion.setAttribute('aria-label', 'Decorative motion is off because reduced motion is enabled in your device settings.');
-    else motion.removeAttribute('aria-label');
-  }
-  if (shouldPause) {
-    $$('.reveal-ready').forEach(item => item.classList.add('revealed'));
-    $$('.scroll-reveal').forEach(item => item.classList.add('is-visible'));
-  }
-}
-if (motion) {
-  motion.addEventListener('click', () => {
-    if (reduced.matches) return;
-    paused = !paused;
-    try { sessionStorage.setItem('cognizance-motion-paused', String(paused)); } catch {}
-    applyMotion();
-  });
-}
-reduced.addEventListener('change', applyMotion);
-applyMotion();
 if ('IntersectionObserver' in window && !reduced.matches) {const reveals = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {entry.target.classList.add('revealed'); reveals.unobserve(entry.target);}}), {threshold: .12}); $$('.about-content, .program-card, .results-panel, .standings, .photo-tile, .video-placeholder').forEach(item => {if(item.getBoundingClientRect().top > innerHeight) {item.classList.add('reveal-ready'); reveals.observe(item);}});}
 if ('IntersectionObserver' in window) {const activeSections = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {$$('.desktop-nav a, .mobile-quick a, .mobile-menu a').forEach(link => {const active = link.hash === '#' + entry.target.id; link.classList.toggle('current', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');});}}), {rootMargin:'-20% 0px -55% 0px', threshold:0}); $$('main section[id]').forEach(section => activeSections.observe(section));}
 filterPrograms();
