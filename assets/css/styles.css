@@ -571,3 +571,121 @@
 
 .mobile-quick { display: none !important; visibility: hidden !important; height: 0 !important; pointer-events: none !important; }
 @media (max-width: 760px) { .credits { padding-bottom: 26px !important; } }
+
+
+
+
+/* Separate, translucent event cards keep date and venue easy to scan. */
+.event-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.event-card {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 255, 255, .88);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .42));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), 0 7px 18px rgba(41, 37, 53, .08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--ink);
+}
+.event-card-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  color: var(--ink);
+}
+.event-card p {
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.event-card--date strong { font-weight: 700; }
+.event-date-short { display: none; }
+@media (max-width: 400px) {
+  .event-date-full { display: none; }
+  .event-date-short { display: inline; white-space: nowrap; }
+  .event-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .event-card {
+    min-width: 0;
+    gap: 7px;
+    padding: 8px 9px;
+    border-radius: 10px;
+  }
+  .event-card-icon { width: 18px; height: 18px; flex-basis: 18px; }
+  .event-card p { font-size: 13px; line-height: 1.3; }
+}
+
+/* Compact the hero on narrow phones so the entire lantern stays in the first view. */
+@media (max-width: 400px) {
+  .site-header { padding-block: 9px; }
+  .site-header .brand-logo { width: 68px; }
+  .hero { gap: 8px; padding-top: 8px !important; padding-bottom: 14px; }
+  .hero h1 {
+    margin-top: 8px;
+    font-size: clamp(42px, 11.5vw, 46px);
+    line-height: 1;
+    letter-spacing: -2.5px;
+  }
+  .hero-actions { margin-top: 16px; gap: 8px; flex-wrap: nowrap; }
+  .hero-actions .button { padding-inline: 12px; white-space: nowrap; }
+  .hero-actions .text-link { white-space: nowrap; }
+  .hero-art {
+    width: min(440px, 100%);
+    height: 230px;
+    min-height: 230px;
+    margin: 8px auto 0;
+  }
+  .hero-lamp { height: 220px; }
+}
+
+
+/* The new header wordmark is a wide transparent logo, not the square favicon mark. */
+.site-header .brand-logo {
+  width: 180px !important;
+  height: auto !important;
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+}
+@media (max-width: 760px) {
+  .site-header .brand-logo { width: min(150px, 46vw) !important; }
+}
+
+
+/* Secondary hero action: a soft coral badge beside the primary button. */
+.hero-actions .text-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 58px;
+  padding: 8px 9px;
+  border: 1px solid #B9432E;
+  border-radius: 4px;
+  background: #B9432E;
+  color: #fff;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .2s, border-color .2s, transform .2s;
+}
+.hero-actions .text-link:hover {
+  background: #A63B2C;
+  border-color: #A63B2C;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1100px) {
+  .hero-actions .text-link { min-height: 56px; }
+}
