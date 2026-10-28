@@ -689,3 +689,6 @@
 @media (max-width: 1100px) {
   .hero-actions .text-link { min-height: 56px; }
 }
+
+/* Keep the sample result label spacing without an inline style. */
+.result-placeholder-label{margin:0 0 12px}
