@@ -691,3 +691,68 @@
 
 /* Keep the sample result label spacing without an inline style. */
 .result-placeholder-label{margin:0 0 12px}
+
+
+/* Text-only hero keyword rotation. Both words share a grid cell so the longest
+   word sets the width and the headline never shifts while the copy changes. */
+.hero-word-slot {
+  display: inline-grid;
+  grid-template-areas: "hero-word";
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.hero-word-slot .hero-word {
+  grid-area: hero-word;
+  white-space: nowrap;
+}
+.hero-word-slot .hero-word--creativity {
+  visibility: hidden;
+}
+.hero-word-slot.is-live .hero-word {
+  visibility: hidden;
+}
+.hero-word-slot.is-live .hero-word.is-current,
+.hero-word-slot.is-live .hero-word.is-exiting {
+  visibility: visible;
+}
+.hero-word-slot.is-live .hero-word.is-current .hero-letter {
+  animation: hero-letter-rise 650ms cubic-bezier(.2,.8,.2,1) both;
+}
+.hero-word-slot.is-live .hero-word.is-exiting .hero-letter {
+  animation: hero-letter-exit 90ms ease-in-out both;
+}
+.hero-letter {
+  display: inline-block;
+}
+@keyframes hero-letter-rise {
+  0% { opacity: 0; transform: translate3d(0,.38em,0); }
+  32% {
+    opacity: 1;
+    transform: translate3d(-.015em,.15em,0);
+    text-shadow: -.015em 0 rgba(238,101,77,.34), .015em 0 rgba(89,119,179,.28);
+  }
+  36% {
+    transform: translate3d(.012em,.07em,0);
+    text-shadow: -.008em 0 rgba(238,101,77,.20), .008em 0 rgba(89,119,179,.16);
+  }
+  40% { transform: translate3d(0,.05em,0); text-shadow: 0 0 transparent; }
+  48% { transform: translate3d(0,.03em,0); text-shadow: 0 0 transparent; }
+  100% { opacity: 1; transform: translate3d(0,0,0); text-shadow: 0 0 transparent; }
+}
+@keyframes hero-letter-exit {
+  0% { opacity: 1; transform: translate3d(0,0,0); }
+  100% { opacity: 0; transform: translate3d(0,-.08em,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-word-slot .hero-word--creativity { display: none !important; }
+  .hero-word-slot .hero-word--possibilities {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .hero-word-slot .hero-letter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

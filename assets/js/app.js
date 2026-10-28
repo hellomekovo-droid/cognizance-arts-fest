@@ -76,3 +76,98 @@ if (document.readyState === 'loading') {
 } else {
   initScrollReveal();
 }
+
+
+// ==============================================================
+// Hero keyword: a quiet, character-by-character rise between words
+// ==============================================================
+function initHeroWordRotator() {
+  const slot = $('.hero-word-slot');
+  if (!slot) return;
+
+  const words = $$('.hero-word', slot);
+  const originalWords = words.map(word => word.textContent);
+  const letterStaggerMs = 22;
+  const exitMs = 120;
+  const wordStartIntervalMs = 5000;
+  const wordDwellMs = wordStartIntervalMs - exitMs;
+  let timer = 0;
+  let exitTimer = 0;
+  let currentIndex = 0;
+
+  function setLetterDelays(word, interval) {
+    $$('.hero-letter', word).forEach((letter, index) => {
+      letter.style.animationDelay = `${index * interval}ms`;
+    });
+  }
+
+  function entryStaggerMs(word) {
+    const letterCount = $$('.hero-letter', word).length;
+    return letterCount > 1 ? letterStaggerMs : 0;
+  }
+
+  function clearMotion() {
+    if (timer) window.clearTimeout(timer);
+    if (exitTimer) window.clearTimeout(exitTimer);
+    timer = 0;
+    exitTimer = 0;
+    currentIndex = 0;
+    slot.classList.remove('is-live');
+    words.forEach((word, index) => {
+      word.classList.remove('is-current', 'is-exiting');
+      word.textContent = originalWords[index];
+    });
+  }
+
+  function splitIntoLetters(word, text) {
+    const fragment = document.createDocumentFragment();
+    const characters = Array.from(text);
+    const staggerMs = characters.length > 1 ? letterStaggerMs : 0;
+    characters.forEach((character, index) => {
+      const letter = document.createElement('span');
+      letter.className = 'hero-letter';
+      letter.textContent = character;
+      letter.style.animationDelay = `${index * staggerMs}ms`;
+      fragment.append(letter);
+    });
+    word.replaceChildren(fragment);
+  }
+
+  function scheduleNextWord() {
+    timer = window.setTimeout(() => {
+      timer = 0;
+      const outgoing = words[currentIndex];
+      const nextIndex = (currentIndex + 1) % words.length;
+      const incoming = words[nextIndex];
+
+      outgoing.classList.remove('is-current');
+      setLetterDelays(outgoing, 2);
+      outgoing.classList.add('is-exiting');
+
+      exitTimer = window.setTimeout(() => {
+        outgoing.classList.remove('is-exiting');
+        exitTimer = 0;
+
+        setLetterDelays(incoming, entryStaggerMs(incoming));
+        incoming.classList.add('is-current');
+        currentIndex = nextIndex;
+        scheduleNextWord();
+      }, exitMs);
+    }, wordDwellMs);
+  }
+
+  function applyMotionPreference() {
+    clearMotion();
+    if (reduced.matches || words.length < 2) return;
+
+    words.forEach((word, index) => splitIntoLetters(word, originalWords[index]));
+    slot.classList.add('is-live');
+    words[0].classList.add('is-current');
+    scheduleNextWord();
+  }
+
+  applyMotionPreference();
+  reduced.addEventListener('change', applyMotionPreference);
+}
+
+initHeroWordRotator();
