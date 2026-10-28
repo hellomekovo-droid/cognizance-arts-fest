@@ -476,32 +476,216 @@
   background: #000000 !important;
 }
 
-/* 6. Header CTA button */
-.header-cta {
-  color: #000000 !important;
-  border: 1.5px solid #000000 !important;
-  background: transparent !important;
-  font-weight: 700 !important;
-  transition: all 0.2s ease;
+/* 6. Three-line Hamburger Menu Button */
+.site-menu-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 38px !important;
+  height: 38px !important;
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.45) !important;
+  border: 1px solid var(--line, #d9d4c9) !important;
+  border-radius: 8px !important;
+  color: var(--ink, #292535) !important;
+  cursor: pointer !important;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  outline: none !important;
+  user-select: none !important;
+  min-height: 38px !important;
+  margin-left: auto !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
 }
-.header-cta:hover {
-  background: #000000 !important;
-  color: var(--paper) !important;
+.site-menu-btn:hover {
+  background: var(--paper, #f6f3e9) !important;
+  border-color: rgba(41, 37, 53, 0.35) !important;
+  color: #B9432E !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(41, 37, 53, 0.08) !important;
+}
+.site-menu-btn:active {
+  transform: translateY(0) !important;
+}
+.menu-lines {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 17px;
+  height: 11px;
+}
+.menu-lines .line {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background-color: currentColor;
+  border-radius: 1px;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, transform 0.2s ease;
+}
+.site-menu-btn:hover .menu-lines .line:nth-child(2) {
+  width: 70%;
 }
 
-/* 7. Mobile menu toggle button */
-.menu-toggle {
-  color: #000000 !important;
-  border: 1.5px solid #000000 !important;
-  background: transparent !important;
-  font-weight: 700 !important;
+/* 7. Slide-over Menu Drawer & Backdrop */
+.site-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(25, 22, 33, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 998;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
-.mobile-menu {
-  background: var(--paper) !important;
+.site-menu-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
 }
-.mobile-menu a {
-  color: #000000 !important;
-  border-top: 1px solid var(--line) !important;
+.site-menu-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(390px, 92vw);
+  height: 100vh;
+  height: 100dvh;
+  background: #faf7f0;
+  border-left: 1px solid var(--line);
+  box-shadow: -15px 0 45px rgba(41, 37, 53, 0.16);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 28px 24px;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.site-menu-drawer.is-open {
+  transform: translateX(0);
+}
+.site-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.site-menu-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.site-menu-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  color: var(--coral);
+}
+.site-menu-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.4px;
+}
+.site-menu-close {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.site-menu-close:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  transform: rotate(90deg);
+}
+.site-menu-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-block: 24px;
+  flex: 1;
+}
+.site-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.site-menu-link .link-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--muted);
+  width: 22px;
+  transition: color 0.2s;
+}
+.site-menu-link .link-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.4px;
+  transition: transform 0.2s;
+}
+.site-menu-link:hover {
+  background: #ede8dc;
+  color: var(--ink);
+  transform: translateX(4px);
+}
+.site-menu-link:hover .link-num {
+  color: var(--coral);
+}
+.site-menu-link.current {
+  background: var(--ink);
+  color: var(--paper);
+}
+.site-menu-link.current .link-num {
+  color: var(--lime);
+}
+.site-menu-link--sub {
+  margin-top: 10px;
+  border-top: 1px dashed var(--line);
+  padding-top: 18px;
+  border-radius: 0;
+}
+.site-menu-link--sub .link-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.site-menu-link--sub:hover .link-label {
+  color: var(--ink);
+}
+.site-menu-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+.menu-footer-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.menu-footer-badge strong {
+  color: var(--ink);
+  font-weight: 600;
 }
 
 @media (max-width: 760px) {
@@ -574,57 +758,78 @@
 
 
 
-/* Separate, translucent event cards keep date and venue easy to scan. */
+/* Compact, refined event badges sitting neatly between headline and action buttons. */
 .event-details {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  margin-bottom: 22px;
+}
+.hero-actions {
+  margin-top: 0 !important;
 }
 .event-card {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  min-height: 48px;
-  padding: 9px 13px;
-  border: 1px solid rgba(255, 255, 255, .88);
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, .78), rgba(255, 255, 255, .42));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .85), 0 7px 18px rgba(41, 37, 53, .08);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  gap: 7px;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid rgba(41, 37, 53, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 1px 4px rgba(41, 37, 53, 0.04);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   color: var(--ink);
+  transition: all 0.2s ease;
+}
+.event-card:hover {
+  background: #ffffff;
+  border-color: rgba(41, 37, 53, 0.28);
+  box-shadow: 0 3px 8px rgba(41, 37, 53, 0.08);
 }
 .event-card-icon {
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
-  color: var(--ink);
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  color: #B9432E;
 }
 .event-card p {
   min-width: 0;
-  font-size: 14px;
-  line-height: 1.3;
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1.2;
+  white-space: nowrap;
 }
-.event-card--date strong { font-weight: 700; }
-.event-date-short { display: none; }
-@media (max-width: 400px) {
+.event-card--date strong {
+  font-weight: 650;
+}
+.event-date-short {
+  display: none;
+}
+@media (max-width: 480px) {
   .event-date-full { display: none; }
   .event-date-short { display: inline; white-space: nowrap; }
   .event-details {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 12px;
+    gap: 6px;
+    margin-top: 10px;
+    margin-bottom: 16px;
   }
   .event-card {
-    min-width: 0;
-    gap: 7px;
-    padding: 8px 9px;
-    border-radius: 10px;
+    min-height: 28px;
+    padding: 3px 9px;
+    gap: 5px;
   }
-  .event-card-icon { width: 18px; height: 18px; flex-basis: 18px; }
-  .event-card p { font-size: 13px; line-height: 1.3; }
+  .event-card-icon {
+    width: 13px;
+    height: 13px;
+    flex-basis: 13px;
+  }
+  .event-card p {
+    font-size: 11.5px;
+  }
 }
 
 /* Compact the hero on narrow phones so the entire lantern stays in the first view. */
@@ -716,32 +921,35 @@
   visibility: visible;
 }
 .hero-word-slot.is-live .hero-word.is-current .hero-letter {
-  animation: hero-letter-rise 650ms cubic-bezier(.2,.8,.2,1) both;
+  animation: hero-letter-rise 420ms cubic-bezier(.16, 1, .3, 1) both;
 }
 .hero-word-slot.is-live .hero-word.is-exiting .hero-letter {
-  animation: hero-letter-exit 90ms ease-in-out both;
+  animation: hero-letter-exit 150ms cubic-bezier(.4, 0, 1, 1) both;
 }
 .hero-letter {
   display: inline-block;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 @keyframes hero-letter-rise {
-  0% { opacity: 0; transform: translate3d(0,.38em,0); }
-  32% {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, .42em, 0);
+  }
+  100% {
     opacity: 1;
-    transform: translate3d(-.015em,.15em,0);
-    text-shadow: -.015em 0 rgba(238,101,77,.34), .015em 0 rgba(89,119,179,.28);
+    transform: translate3d(0, 0, 0);
   }
-  36% {
-    transform: translate3d(.012em,.07em,0);
-    text-shadow: -.008em 0 rgba(238,101,77,.20), .008em 0 rgba(89,119,179,.16);
-  }
-  40% { transform: translate3d(0,.05em,0); text-shadow: 0 0 transparent; }
-  48% { transform: translate3d(0,.03em,0); text-shadow: 0 0 transparent; }
-  100% { opacity: 1; transform: translate3d(0,0,0); text-shadow: 0 0 transparent; }
 }
 @keyframes hero-letter-exit {
-  0% { opacity: 1; transform: translate3d(0,0,0); }
-  100% { opacity: 0; transform: translate3d(0,-.08em,0); }
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -.25em, 0);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-word-slot .hero-word--creativity { display: none !important; }

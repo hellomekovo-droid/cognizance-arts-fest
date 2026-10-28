@@ -1,13 +1,68 @@
 'use strict';
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const menuButton = $('.menu-toggle');
-const menu = $('#mobile-menu');
-function closeMenu(returnFocus = false) {menu.hidden = true; menuButton.setAttribute('aria-expanded', 'false'); if (returnFocus) menuButton.focus();}
-menuButton.addEventListener('click', () => {const open = menu.hidden; menu.hidden = !open; menuButton.setAttribute('aria-expanded', String(open));});
-$$('a', menu).forEach(link => link.addEventListener('click', () => closeMenu()));
-document.addEventListener('keydown', event => {if (event.key === 'Escape' && !menu.hidden) closeMenu(true);});
-matchMedia('(min-width: 761px)').addEventListener('change', event => {if (event.matches) closeMenu();});
+function initSiteMenu() {
+  const toggleBtn = $('#menu-toggle');
+  const drawer = $('#site-menu-drawer');
+  const backdrop = $('#menu-backdrop');
+  const closeBtn = $('#menu-close');
+  if (!toggleBtn || !drawer) return;
+
+  function openMenu() {
+    if (backdrop) backdrop.hidden = false;
+    drawer.hidden = false;
+    void drawer.offsetWidth;
+    if (backdrop) backdrop.classList.add('is-open');
+    drawer.classList.add('is-open');
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('modal-open');
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeMenu(returnFocus = true) {
+    if (backdrop) backdrop.classList.remove('is-open');
+    drawer.classList.remove('is-open');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('modal-open');
+
+    setTimeout(() => {
+      if (!drawer.classList.contains('is-open')) {
+        drawer.hidden = true;
+        if (backdrop) backdrop.hidden = true;
+      }
+    }, 350);
+
+    if (returnFocus && toggleBtn) toggleBtn.focus();
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const isOpen = drawer.classList.contains('is-open');
+    if (isOpen) closeMenu(false);
+    else openMenu();
+  });
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => closeMenu(true));
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', () => closeMenu(true));
+  }
+
+  $$('.site-menu-link', drawer).forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu(false);
+    });
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && drawer.classList.contains('is-open')) {
+      closeMenu(true);
+    }
+  });
+}
+initSiteMenu();
+
 let category = 'all';
 function filterPrograms() {const query = $('#program-search').value.trim().toLowerCase(); let count = 0; $$('.program-card').forEach(card => {const visible = (category === 'all' || category === card.dataset.category) && card.textContent.toLowerCase().includes(query); card.hidden = !visible; if (visible) count++;}); $('#program-count').textContent = `${count} sample program${count === 1 ? '' : 's'} · official lineup coming soon`; $('#program-empty').hidden = count !== 0;}
 $$('[data-program]').forEach(button => button.addEventListener('click', () => {category = button.dataset.program; $$('[data-program]').forEach(item => {const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected));}); filterPrograms();}));
@@ -18,7 +73,7 @@ let galleryFilter = 'all';
 $$('[data-gallery]').forEach(button => button.addEventListener('click', () => {galleryFilter = button.dataset.gallery; $$('[data-gallery]').forEach(item => {const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected));}); let count = 0; $$('.photo-tile').forEach(tile => {tile.hidden = galleryFilter !== 'all' && tile.dataset.category !== galleryFilter; if (!tile.hidden) count++;}); $('#photo-count').textContent = `${count} sample photo space${count === 1 ? '' : 's'}`;}));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 if ('IntersectionObserver' in window && !reduced.matches) {const reveals = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {entry.target.classList.add('revealed'); reveals.unobserve(entry.target);}}), {threshold: .12}); $$('.about-content, .program-card, .results-panel, .standings, .photo-tile, .video-placeholder').forEach(item => {if(item.getBoundingClientRect().top > innerHeight) {item.classList.add('reveal-ready'); reveals.observe(item);}});}
-if ('IntersectionObserver' in window) {const activeSections = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {$$('.desktop-nav a, .mobile-quick a, .mobile-menu a').forEach(link => {const active = link.hash === '#' + entry.target.id; link.classList.toggle('current', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');});}}), {rootMargin:'-20% 0px -55% 0px', threshold:0}); $$('main section[id]').forEach(section => activeSections.observe(section));}
+if ('IntersectionObserver' in window) {const activeSections = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {$$('.site-menu-link, .desktop-nav a, .mobile-quick a').forEach(link => {const active = link.hash === '#' + entry.target.id; link.classList.toggle('current', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');});}}), {rootMargin:'-20% 0px -55% 0px', threshold:0}); $$('main section[id]').forEach(section => activeSections.observe(section));}
 filterPrograms();
 
 
@@ -87,9 +142,9 @@ function initHeroWordRotator() {
 
   const words = $$('.hero-word', slot);
   const originalWords = words.map(word => word.textContent);
-  const letterStaggerMs = 22;
-  const exitMs = 120;
-  const wordStartIntervalMs = 5000;
+  const letterStaggerMs = 14;
+  const exitMs = 150;
+  const wordStartIntervalMs = 2000;
   const wordDwellMs = wordStartIntervalMs - exitMs;
   let timer = 0;
   let exitTimer = 0;
@@ -141,7 +196,7 @@ function initHeroWordRotator() {
       const incoming = words[nextIndex];
 
       outgoing.classList.remove('is-current');
-      setLetterDelays(outgoing, 2);
+      setLetterDelays(outgoing, 0);
       outgoing.classList.add('is-exiting');
 
       exitTimer = window.setTimeout(() => {
