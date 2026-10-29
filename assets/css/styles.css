@@ -43,6 +43,7 @@
   .stage-card{height:300px}
   .stage-card figcaption{min-height:76px;padding:12px 8px}
   .hero>.visual-note{align-self:center;width:100%;margin:8px 0 0;padding:8px 0;overflow-wrap:anywhere}
+  .photo-caption > span { min-width: 0; }
   .hero>.scroll-cue{position:static;align-self:flex-start;min-height:44px;margin:0;padding:8px 0;font-size:12px;line-height:1.6;letter-spacing:1px}
   .hero{padding-bottom:30px}
 }
@@ -963,4 +964,8 @@
     opacity: 1 !important;
     transform: none !important;
   }
+}
+
+@media (max-width: 760px) {
+  .photo-no-break { white-space: nowrap; }
 }
