@@ -1,0 +1,536 @@
+/* =====================================================================
+   COGNIZANCE ARTS FEST ’26 — SIGNATURE PRELOADER STYLES
+   Bespoke, hardware-accelerated, zero-jank entrance preloader
+   ===================================================================== */
+
+/* Lock body scrolling while preloader is active */
+body.preloader-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+  touch-action: none;
+}
+
+/* Master preloader overlay */
+.cognizance-preloader {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #120f1a;
+  overflow: hidden;
+  user-select: none;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, visibility;
+}
+
+/* -------------------------------------------------------------
+   Ambient lighting & background glows
+   ------------------------------------------------------------- */
+.preloader-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.ambient-orb--coral {
+  width: min(500px, 85vw);
+  height: min(500px, 85vw);
+  background: radial-gradient(circle, #ee654d 0%, rgba(238, 101, 77, 0) 70%);
+  top: -10%;
+  left: 15%;
+  animation: preloaderDriftA 10s ease-in-out infinite alternate;
+}
+
+.ambient-orb--purple {
+  width: min(560px, 90vw);
+  height: min(560px, 90vw);
+  background: radial-gradient(circle, #8b5cf6 0%, rgba(139, 92, 246, 0) 70%);
+  bottom: -15%;
+  right: 10%;
+  opacity: 0.45;
+  animation: preloaderDriftB 12s ease-in-out infinite alternate;
+}
+
+.ambient-orb--gold {
+  width: min(380px, 65vw);
+  height: min(380px, 65vw);
+  background: radial-gradient(circle, #f59e0b 0%, rgba(245, 158, 11, 0) 70%);
+  top: 45%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  opacity: 0.25;
+  animation: preloaderPulseGold 7s ease-in-out infinite;
+}
+
+.ambient-grid-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: center center;
+  opacity: 0.7;
+  mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 30%, transparent 80%);
+}
+
+@keyframes preloaderDriftA {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(40px, 35px, 0) scale(1.15); }
+}
+
+@keyframes preloaderDriftB {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(-35px, -45px, 0) scale(1.12); }
+}
+
+@keyframes preloaderPulseGold {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.2; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.35; }
+}
+
+/* -------------------------------------------------------------
+   Drifting artistic spark particles
+   ------------------------------------------------------------- */
+.preloader-sparks {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.preloader-sparks .spark {
+  position: absolute;
+  color: #fce7b2;
+  font-size: 14px;
+  opacity: 0;
+  animation: sparkFloat 5s ease-in-out infinite;
+}
+
+.spark--1 { top: 22%; left: 24%; font-size: 18px; color: #ee654d; animation-delay: 0.2s; }
+.spark--2 { top: 32%; right: 26%; font-size: 13px; color: #dae58b; animation-delay: 1.4s; }
+.spark--3 { bottom: 28%; left: 28%; font-size: 15px; color: #b7a4d3; animation-delay: 2.2s; }
+.spark--4 { top: 68%; right: 24%; font-size: 20px; color: #ee654d; animation-delay: 0.8s; }
+.spark--5 { top: 16%; right: 35%; font-size: 11px; color: #ffffff; animation-delay: 2.9s; }
+.spark--6 { bottom: 20%; right: 38%; font-size: 16px; color: #f59e0b; animation-delay: 3.5s; }
+
+@keyframes sparkFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.6) rotate(0deg);
+  }
+  30% {
+    opacity: 0.85;
+  }
+  70% {
+    opacity: 0.85;
+    transform: translateY(-20px) scale(1.1) rotate(45deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.5) rotate(90deg);
+  }
+}
+
+/* -------------------------------------------------------------
+   Central Composition Card
+   ------------------------------------------------------------- */
+.preloader-card {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 480px;
+  width: 90%;
+  padding: 32px 24px;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.5s ease-out;
+  will-change: transform, opacity;
+}
+
+/* -------------------------------------------------------------
+   Orbital Rings & Festival Emblem
+   ------------------------------------------------------------- */
+.preloader-emblem-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.orbital-ring {
+  position: absolute;
+  border-radius: 50%;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.ring-outer {
+  inset: -14px;
+  border: 2px dashed rgba(238, 101, 77, 0.45);
+  animation: spinOuter 14s linear infinite;
+}
+
+.ring-outer::before {
+  content: '✦';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #dae58b;
+  font-size: 11px;
+  line-height: 1;
+  text-shadow: 0 0 8px #dae58b;
+}
+
+.ring-mid {
+  inset: -4px;
+  border: 1.5px solid transparent;
+  border-top-color: #b7a4d3;
+  border-bottom-color: #ee654d;
+  box-shadow: 0 0 16px rgba(183, 164, 211, 0.25);
+  animation: spinMid 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.ring-inner {
+  inset: 6px;
+  border: 1px dotted rgba(255, 255, 255, 0.2);
+  animation: spinOuter 20s linear infinite reverse;
+}
+
+.emblem-core {
+  position: relative;
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #2a2238 0%, #151120 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  box-shadow: 
+    0 12px 30px rgba(0, 0, 0, 0.6),
+    0 0 25px rgba(238, 101, 77, 0.35),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  animation: coreFloat 4s ease-in-out infinite alternate;
+}
+
+.emblem-img {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+  transition: transform 0.3s ease;
+}
+
+.emblem-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(238, 101, 77, 0.3) 0%, transparent 70%);
+  animation: glowPulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes spinOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinMid {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(190deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes coreFloat {
+  0% { transform: translateY(0px) scale(1); }
+  100% { transform: translateY(-4px) scale(1.03); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* -------------------------------------------------------------
+   Branding & Typography
+   ------------------------------------------------------------- */
+.preloader-branding {
+  margin-bottom: 28px;
+}
+
+.preloader-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #dae58b;
+  margin-bottom: 8px;
+  text-shadow: 0 0 12px rgba(218, 229, 139, 0.4);
+}
+
+.eyebrow-pip {
+  font-size: 10px;
+  color: #ee654d;
+}
+
+.preloader-title {
+  font-family: 'Manrope', 'DM Sans', sans-serif;
+  font-size: clamp(32px, 7vw, 44px);
+  font-weight: 800;
+  letter-spacing: 4px;
+  line-height: 1.1;
+  margin: 0 0 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #f6f3e9 40%, #d8cde9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5));
+}
+
+.preloader-tagline {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  color: #beb6cb;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.preloader-tagline em {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  color: #ee654d;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+}
+
+/* -------------------------------------------------------------
+   Progress Bar & Meta Status
+   ------------------------------------------------------------- */
+.preloader-progress-box {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preloader-bar-track {
+  width: 100%;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.preloader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ee654d 0%, #d946ef 45%, #8b5cf6 80%, #dae58b 100%);
+  border-radius: 999px;
+  position: relative;
+  box-shadow: 0 0 12px rgba(238, 101, 77, 0.7);
+  transition: width 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: width;
+}
+
+.preloader-bar-flare {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+  box-shadow: 0 0 10px 2px #ffffff, 0 0 16px 4px #dae58b;
+}
+
+.preloader-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: #9d94ab;
+  padding-inline: 4px;
+}
+
+.preloader-status {
+  font-weight: 500;
+  color: #cbc3d9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+  text-align: left;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.preloader-percentage {
+  font-family: 'Manrope', monospace;
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  min-width: 42px;
+  text-align: right;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* -------------------------------------------------------------
+   Theatrical Split Curtain Exit
+   ------------------------------------------------------------- */
+.preloader-curtain {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50.5%;
+  background: #14111d;
+  z-index: 5;
+  pointer-events: none;
+  transition: transform 0.85s cubic-bezier(0.77, 0, 0.175, 1);
+  will-change: transform;
+}
+
+.curtain-top {
+  top: 0;
+  transform-origin: top center;
+  border-bottom: 1px solid rgba(238, 101, 77, 0.25);
+}
+
+.curtain-bottom {
+  bottom: 0;
+  transform-origin: bottom center;
+  border-top: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+/* -------------------------------------------------------------
+   Finishing & Exit States
+   ------------------------------------------------------------- */
+/* Step 1: Preloader completed stage */
+.cognizance-preloader.is-finished .preloader-card {
+  transform: scale(0.94);
+  opacity: 0;
+  transition-duration: 0.45s;
+}
+
+.cognizance-preloader.is-finished .preloader-ambient {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* Step 2: Curtains slide open */
+.cognizance-preloader.is-finished .curtain-top {
+  transform: translateY(-100%);
+}
+
+.cognizance-preloader.is-finished .curtain-bottom {
+  transform: translateY(100%);
+}
+
+/* Step 3: Overlay fades completely */
+.cognizance-preloader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none !important;
+}
+
+/* -------------------------------------------------------------
+   Mobile & Responsive Adjustments
+   ------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .preloader-card {
+    padding: 24px 16px;
+    width: 92%;
+  }
+
+  .preloader-emblem-wrap {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+  }
+
+  .emblem-core {
+    width: 84px;
+    height: 84px;
+  }
+
+  .emblem-img {
+    width: 66px;
+    height: 66px;
+  }
+
+  .preloader-title {
+    font-size: 30px;
+    letter-spacing: 3px;
+  }
+
+  .preloader-tagline {
+    font-size: 14px;
+  }
+
+  .preloader-progress-box {
+    max-width: 280px;
+  }
+
+  .preloader-meta {
+    font-size: 11px;
+  }
+
+  .preloader-status {
+    max-width: 200px;
+  }
+}
+
+/* -------------------------------------------------------------
+   Reduced Motion Accessibility
+   ------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb,
+  .orbital-ring,
+  .emblem-core,
+  .emblem-glow,
+  .spark {
+    animation: none !important;
+  }
+
+  .preloader-curtain {
+    transition: opacity 0.3s ease !important;
+    transform: none !important;
+  }
+
+  .cognizance-preloader.is-finished .curtain-top,
+  .cognizance-preloader.is-finished .curtain-bottom {
+    opacity: 0 !important;
+  }
+}
