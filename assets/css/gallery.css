@@ -1,0 +1,55 @@
+/* Gallery-only styling. The rest of the site's stylesheet is unchanged. */
+.gallery-carousel { min-width: 0; background: var(--paper); }
+.gallery-track {
+  position: relative;
+  display: flex;
+  gap: 22px;
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.gallery-track::-webkit-scrollbar { display: none; }
+.gallery-track:focus-visible { outline: 3px solid #7040a3; outline-offset: 6px; border-radius: 12px; }
+.gallery-photo {
+  flex: 0 0 82%;
+  min-width: 0;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #e7e1d6;
+}
+/* Leave a little runway after the final loop copy so the strip never feels clipped. */
+.gallery-photo:last-child { margin-right: 18%; }
+.gallery-photo > img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-controls { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 22px; }
+.gallery-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+.gallery-control svg { fill: none; stroke: currentColor; stroke-width: 1.5; }
+.gallery-control:not(:disabled):hover { background: #eeeadf; border-color: #a9a193; }
+.gallery-controls[hidden] { display: none; }
+@media (max-width: 760px) {
+  .gallery-track { gap: 14px; }
+  .gallery-photo { flex-basis: 88%; border-radius: 10px; }
+  .gallery-photo:last-child { margin-right: 12%; }
+  .gallery-controls { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track { scroll-behavior: auto !important; }
+  .gallery-control { transition: none; }
+}
