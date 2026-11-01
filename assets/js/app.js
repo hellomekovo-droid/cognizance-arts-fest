@@ -72,17 +72,20 @@ $('#result-search').addEventListener('input', event => {const searching = event.
 let galleryFilter = 'all';
 $$('[data-gallery]').forEach(button => button.addEventListener('click', () => {galleryFilter = button.dataset.gallery; $$('[data-gallery]').forEach(item => {const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected));}); let count = 0; $$('.photo-tile').forEach(tile => {tile.hidden = galleryFilter !== 'all' && tile.dataset.category !== galleryFilter; if (!tile.hidden) count++;}); $('#photo-count').textContent = `${count} festival photo${count === 1 ? '' : 's'}`;}));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-if ('IntersectionObserver' in window && !reduced.matches) {const reveals = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {entry.target.classList.add('revealed'); reveals.unobserve(entry.target);}}), {threshold: .12}); $$('.about-content, .program-card, .results-panel, .standings, .photo-tile, .video-placeholder').forEach(item => {if(item.getBoundingClientRect().top > innerHeight) {item.classList.add('reveal-ready'); reveals.observe(item);}});}
 if ('IntersectionObserver' in window) {const activeSections = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {$$('.site-menu-link, .desktop-nav a, .mobile-quick a').forEach(link => {const active = link.hash === '#' + entry.target.id; link.classList.toggle('current', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');});}}), {rootMargin:'-20% 0px -55% 0px', threshold:0}); $$('main section[id]').forEach(section => activeSections.observe(section));}
 filterPrograms();
 
 
 // ==============================================================
 // CINEMATIC SCROLL-REVEAL TEXT MOTION
-// Detects scrolling into each section, waits a moment, then smoothly reveals text
+// Lightweight, instant initial view, buttery smooth on scroll
 // ==============================================================
 function initScrollReveal() {
   if (!('IntersectionObserver' in window)) return;
+  if (reduced.matches) {
+    $$('.scroll-reveal').forEach(el => el.classList.add('is-visible'));
+    return;
+  }
 
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
@@ -92,8 +95,8 @@ function initScrollReveal() {
       }
     });
   }, {
-    threshold: 0.12,
-    rootMargin: '0px 0px -40px 0px'
+    threshold: 0.08,
+    rootMargin: '0px 0px -20px 0px'
   });
 
   const sections = $$('main > section, .quick-strip, footer');
@@ -116,9 +119,7 @@ function initScrollReveal() {
 
       const rect = elem.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        setTimeout(() => {
-          elem.classList.add('is-visible');
-        }, 150 + (idx * 120));
+        elem.classList.add('is-visible');
       } else {
         revealObserver.observe(elem);
       }
@@ -135,6 +136,7 @@ if (document.readyState === 'loading') {
 
 // ==============================================================
 // Hero keyword: a quiet, character-by-character rise between words
+// Pauses when off-screen to save battery and eliminate background lag
 // ==============================================================
 function initHeroWordRotator() {
   const slot = $('.hero-word-slot');
@@ -149,6 +151,7 @@ function initHeroWordRotator() {
   let timer = 0;
   let exitTimer = 0;
   let currentIndex = 0;
+  let inHeroView = true;
 
   function setLetterDelays(word, interval) {
     $$('.hero-letter', word).forEach((letter, index) => {
@@ -189,8 +192,10 @@ function initHeroWordRotator() {
   }
 
   function scheduleNextWord() {
+    if (!inHeroView || document.hidden) return;
     timer = window.setTimeout(() => {
       timer = 0;
+      if (!inHeroView || document.hidden) return;
       const outgoing = words[currentIndex];
       const nextIndex = (currentIndex + 1) % words.length;
       const incoming = words[nextIndex];
@@ -202,6 +207,7 @@ function initHeroWordRotator() {
       exitTimer = window.setTimeout(() => {
         outgoing.classList.remove('is-exiting');
         exitTimer = 0;
+        if (!inHeroView || document.hidden) return;
 
         setLetterDelays(incoming, entryStaggerMs(incoming));
         incoming.classList.add('is-current');
@@ -223,6 +229,61 @@ function initHeroWordRotator() {
 
   applyMotionPreference();
   reduced.addEventListener('change', applyMotionPreference);
+
+  if ('IntersectionObserver' in window) {
+    const heroObserver = new IntersectionObserver(entries => {
+      inHeroView = entries[0].isIntersecting;
+      if (inHeroView) {
+        if (!timer && !exitTimer && !reduced.matches) scheduleNextWord();
+      } else {
+        if (timer) { window.clearTimeout(timer); timer = 0; }
+        if (exitTimer) { window.clearTimeout(exitTimer); exitTimer = 0; }
+      }
+    }, { threshold: 0.1 });
+    const heroElem = $('#home');
+    if (heroElem) heroObserver.observe(heroElem);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (timer) { window.clearTimeout(timer); timer = 0; }
+      if (exitTimer) { window.clearTimeout(exitTimer); exitTimer = 0; }
+    } else if (inHeroView && !reduced.matches) {
+      if (!timer && !exitTimer) scheduleNextWord();
+    }
+  });
 }
 
 initHeroWordRotator();
+
+// ==============================================================
+// OFF-SCREEN ANIMATION THROTTLING
+// Pauses heavy CSS animations when scrolled out of view to save battery & GPU
+// ==============================================================
+function initOffscreenOptimizations() {
+  if (!('IntersectionObserver' in window)) return;
+
+  // 1. Pause marquee ribbons when not in view
+  const ribbonsWrapper = $('.cognizance-ribbons-wrapper');
+  if (ribbonsWrapper) {
+    const ribbonObserver = new IntersectionObserver(entries => {
+      ribbonsWrapper.classList.toggle('is-paused', !entries[0].isIntersecting);
+    }, { threshold: 0 });
+    ribbonObserver.observe(ribbonsWrapper);
+  }
+
+  // 2. Pause hero flame & glow when scrolled past hero
+  const heroSection = $('#home');
+  if (heroSection) {
+    const heroObserver = new IntersectionObserver(entries => {
+      heroSection.classList.toggle('is-paused', !entries[0].isIntersecting);
+    }, { threshold: 0 });
+    heroObserver.observe(heroSection);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initOffscreenOptimizations);
+} else {
+  initOffscreenOptimizations();
+}

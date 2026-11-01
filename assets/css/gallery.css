@@ -1,5 +1,5 @@
-/* Gallery-only styling. The rest of the site's stylesheet is unchanged. */
-.gallery-carousel { min-width: 0; background: var(--paper); }
+/* Gallery-only styling. Hardware accelerated, silky smooth mobile and desktop experience */
+.gallery-carousel { min-width: 0; background: var(--paper); contain: layout; }
 .gallery-track {
   position: relative;
   display: flex;
@@ -11,6 +11,13 @@
   overscroll-behavior-x: contain;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gallery-track:active {
+  cursor: grabbing;
 }
 .gallery-track::-webkit-scrollbar { display: none; }
 .gallery-track:focus-visible { outline: 3px solid #7040a3; outline-offset: 6px; border-radius: 12px; }
@@ -21,10 +28,19 @@
   overflow: hidden;
   border-radius: 12px;
   background: #e7e1d6;
+  contain: layout paint;
+  transform: translateZ(0);
 }
 /* Leave a little runway after the final loop copy so the strip never feels clipped. */
 .gallery-photo:last-child { margin-right: 18%; }
-.gallery-photo > img { width: 100%; height: 100%; object-fit: cover; }
+.gallery-photo > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
 .gallery-controls { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 22px; }
 .gallery-control {
   display: inline-flex;
@@ -38,10 +54,11 @@
   border-radius: 50%;
   background: transparent;
   color: var(--ink);
-  transition: background-color 160ms ease, border-color 160ms ease;
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 .gallery-control svg { fill: none; stroke: currentColor; stroke-width: 1.5; }
-.gallery-control:not(:disabled):hover { background: #eeeadf; border-color: #a9a193; }
+.gallery-control:not(:disabled):hover { background: #eeeadf; border-color: #a9a193; transform: scale(1.05); }
+.gallery-control:not(:disabled):active { transform: scale(0.96); }
 .gallery-controls[hidden] { display: none; }
 @media (max-width: 760px) {
   .gallery-track { gap: 14px; }

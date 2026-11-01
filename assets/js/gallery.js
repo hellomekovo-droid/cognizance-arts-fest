@@ -47,20 +47,24 @@
     const previous = carousel.querySelector('#gallery-prev');
     const next = carousel.querySelector('#gallery-next');
     const status = carousel.querySelector('#gallery-status');
-    const ribbonTrack = document.querySelector('.criss-ribbon--red .criss-ribbon__track');
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const fallbackGlideDuration = 22000;
     const cycleStart = items.length;
     const cycleEnd = items.length * 2;
+
     let positions = [];
     let cycleDistance = 0;
-    let pixelsPerSecond = 0;
+    // Balanced middle speed: lively & engaging, yet smooth and completely lag-free
+    const defaultSpeed = window.innerWidth <= 768 ? 75 : 85;
+    let pixelsPerSecond = typeof window.COGNIZANCE_GALLERY_SPEED === 'number'
+      ? window.COGNIZANCE_GALLERY_SPEED
+      : defaultSpeed;
     let index = 0;
     let virtualIndex = cycleStart;
     let animationFrame = 0;
     let lastFrameTime = 0;
     let motionPosition = 0;
     let settleTimer = 0;
+    let scrollEndTimer = 0;
     let hovered = false;
     let focused = false;
     let userInteracting = false;
@@ -68,22 +72,8 @@
     let touchActive = false;
     let inView = !('IntersectionObserver' in window);
     let initialized = false;
-
-    function measureRibbonSpeed() {
-      if (ribbonTrack) {
-        const durationValue = getComputedStyle(ribbonTrack).animationDuration.split(',')[0].trim();
-        const durationMatch = durationValue.match(/^([\d.]+)(ms|s)$/);
-        const durationSeconds = durationMatch
-          ? Number(durationMatch[1]) / (durationMatch[2] === 'ms' ? 1000 : 1)
-          : 0;
-        // The top ribbon moves half of its duplicated track each animation cycle.
-        const ribbonTravelDistance = ribbonTrack.scrollWidth / 2;
-        pixelsPerSecond = durationSeconds > 0 ? ribbonTravelDistance / durationSeconds : 0;
-      }
-      if (!pixelsPerSecond && cycleDistance > 0) {
-        pixelsPerSecond = (cycleDistance / items.length) / (fallbackGlideDuration / 1000);
-      }
-    }
+    let isGlidingScroll = false;
+    let lastMeasuredWidth = 0;
 
     // Render three copies and start in the middle one. The outer copies are inert,
     // so the visual strip can loop seamlessly without duplicate screen-reader slides.
@@ -91,9 +81,16 @@
       ? [0, 1, 2].flatMap(cycle => items.map((item, itemIndex) => ({
         ...item,
         isLoopClone: cycle !== 1,
-        logicalIndex: itemIndex
+        logicalIndex: itemIndex,
+        isInitialInView: cycle === 1 && itemIndex < 2
       })))
-      : items.map((item, itemIndex) => ({ ...item, isLoopClone: false, logicalIndex: itemIndex }));
+      : items.map((item, itemIndex) => ({
+        ...item,
+        isLoopClone: false,
+        logicalIndex: itemIndex,
+        isInitialInView: true
+      }));
+
     const fragment = document.createDocumentFragment();
     renderedItems.forEach(item => {
       const card = document.createElement('div');
@@ -111,7 +108,8 @@
       image.alt = item.isLoopClone ? '' : (item.alt || '');
       image.width = item.width || 1024;
       image.height = item.height || 682;
-      image.loading = 'eager';
+      // Only eager-load images visible on first paint to conserve mobile VRAM & bandwidth
+      image.loading = item.isInitialInView ? 'eager' : 'lazy';
       image.decoding = 'async';
       card.append(image);
       fragment.append(card);
@@ -121,35 +119,47 @@
     const cards = [...track.children];
     const hasSteps = () => items.length > 1 && cycleDistance > 0;
 
-    if (motion.matches) {
+    if (motion.matches && status) {
       status.textContent = 'Automatic movement is off because reduced motion is enabled.';
     }
 
     function clearSettleTimer() {
-      window.clearTimeout(settleTimer);
-      settleTimer = 0;
+      if (settleTimer) {
+        window.clearTimeout(settleTimer);
+        settleTimer = 0;
+      }
+      if (scrollEndTimer) {
+        window.clearTimeout(scrollEndTimer);
+        scrollEndTimer = 0;
+      }
     }
 
     function stopGliding() {
-      if (animationFrame) window.cancelAnimationFrame(animationFrame);
-      animationFrame = 0;
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      }
       lastFrameTime = 0;
     }
 
     function updateControls() {
       const canMove = hasSteps();
-      previous.disabled = !canMove;
-      next.disabled = !canMove;
+      if (previous) previous.disabled = !canMove;
+      if (next) next.disabled = !canMove;
     }
 
     function nearestPositionIndex() {
       if (!positions.length) return 0;
+      const currentScroll = track.scrollLeft;
       let nearest = 0;
-      positions.forEach((position, positionIndex) => {
-        if (Math.abs(position - track.scrollLeft) < Math.abs(positions[nearest] - track.scrollLeft)) {
-          nearest = positionIndex;
+      let minDiff = Infinity;
+      for (let i = 0; i < positions.length; i++) {
+        const diff = Math.abs(positions[i] - currentScroll);
+        if (diff < minDiff) {
+          minDiff = diff;
+          nearest = i;
         }
-      });
+      }
       return nearest;
     }
 
@@ -158,9 +168,11 @@
       let left = track.scrollLeft;
       const start = positions[cycleStart];
       const end = positions[cycleEnd];
-      while (left >= end) left -= cycleDistance;
-      while (left < start) left += cycleDistance;
-      if (Math.abs(left - track.scrollLeft) > 0.5) {
+      if (left >= end) {
+        while (left >= end) left -= cycleDistance;
+        track.scrollTo({ left, behavior: 'instant' });
+      } else if (left < start) {
+        while (left < start) left += cycleDistance;
         track.scrollTo({ left, behavior: 'instant' });
       }
     }
@@ -178,6 +190,7 @@
         inView && !document.hidden && hasSteps();
     }
 
+    // Hardware-composited smooth glide without layout thrashing
     function glide(timestamp) {
       if (!canAutoplay()) {
         stopGliding();
@@ -185,13 +198,19 @@
       }
       if (lastFrameTime) {
         const elapsed = Math.min(timestamp - lastFrameTime, 48);
-        motionPosition += pixelsPerSecond * elapsed / 1000;
+        motionPosition += (pixelsPerSecond * elapsed) / 1000;
+
         const loopStart = positions[cycleStart];
         const loopEnd = positions[cycleEnd];
-        while (motionPosition >= loopEnd) motionPosition -= cycleDistance;
-        while (motionPosition < loopStart) motionPosition += cycleDistance;
+        if (motionPosition >= loopEnd) {
+          motionPosition -= cycleDistance;
+        } else if (motionPosition < loopStart) {
+          motionPosition += cycleDistance;
+        }
+
+        // Set scroll position directly without reading layout back
+        isGlidingScroll = true;
         track.scrollLeft = motionPosition;
-        syncPosition();
       }
       lastFrameTime = timestamp;
       animationFrame = window.requestAnimationFrame(glide);
@@ -209,17 +228,6 @@
       }
     }
 
-    function settleInteraction() {
-      clearSettleTimer();
-      settleTimer = window.setTimeout(() => {
-        settleTimer = 0;
-        if (pointerActive || touchActive) return;
-        userInteracting = false;
-        syncPosition();
-        schedule();
-      }, 220);
-    }
-
     function goToVirtual(targetVirtual, announce = true) {
       if (!positions.length) return;
       stopGliding();
@@ -231,24 +239,36 @@
       const targetLeft = positions[targetVirtual];
       track.scrollTo({ left: targetLeft, behavior: motion.matches ? 'instant' : 'smooth' });
       updateControls();
-      if (announce) status.textContent = `Photo position ${index + 1} of ${items.length}.`;
-      if (Math.abs(track.scrollLeft - targetLeft) < 1) {
-        syncPosition();
-        schedule();
+      if (announce && status) {
+        status.textContent = `Photo position ${index + 1} of ${items.length}.`;
       }
+
+      clearSettleTimer();
+      settleTimer = window.setTimeout(() => {
+        syncPosition();
+        motionPosition = track.scrollLeft;
+        userInteracting = false;
+        schedule();
+      }, 700);
     }
 
     function navigate(direction) {
       if (!hasSteps()) return;
+      userInteracting = true;
+      stopGliding();
+      clearSettleTimer();
       const current = nearestPositionIndex();
       goToVirtual(current + direction);
     }
 
     function goToLogical(target) {
       if (!hasSteps()) return;
+      userInteracting = true;
+      stopGliding();
+      clearSettleTimer();
       const logicalTarget = (target + items.length) % items.length;
-      const candidates = positions.map((_, positionIndex) => positionIndex)
-        .filter(positionIndex => positionIndex % items.length === logicalTarget);
+      const candidates = positions.map((_, posIdx) => posIdx)
+        .filter(posIdx => posIdx % items.length === logicalTarget);
       const targetVirtual = candidates.reduce((best, candidate) =>
         Math.abs(positions[candidate] - track.scrollLeft) < Math.abs(positions[best] - track.scrollLeft)
           ? candidate
@@ -256,8 +276,8 @@
       goToVirtual(targetVirtual);
     }
 
-    previous.addEventListener('click', () => navigate(-1));
-    next.addEventListener('click', () => navigate(1));
+    if (previous) previous.addEventListener('click', () => navigate(-1));
+    if (next) next.addEventListener('click', () => navigate(1));
 
     carousel.addEventListener('keydown', event => {
       if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
@@ -273,23 +293,29 @@
         goToLogical(items.length - 1);
       }
     });
+
     carousel.addEventListener('pointerenter', event => {
       if (event.pointerType === 'touch') return;
       hovered = true;
       stopGliding();
     });
+
     carousel.addEventListener('pointerleave', () => {
       hovered = false;
       schedule();
     });
+
     carousel.addEventListener('focusin', () => {
       focused = true;
       stopGliding();
     });
+
     carousel.addEventListener('focusout', event => {
       focused = carousel.contains(event.relatedTarget);
       schedule();
     });
+
+    // Handle touch & pointer events cleanly without hijacking browser scrolling
     carousel.addEventListener('pointerdown', event => {
       pointerActive = true;
       if (event.pointerType === 'touch') {
@@ -300,14 +326,17 @@
       clearSettleTimer();
       stopGliding();
     }, { passive: true });
+
     carousel.addEventListener('pointerup', () => {
       pointerActive = false;
-      settleInteraction();
+      touchActive = false;
     }, { passive: true });
+
     carousel.addEventListener('pointercancel', () => {
       pointerActive = false;
-      settleInteraction();
+      touchActive = false;
     }, { passive: true });
+
     carousel.addEventListener('touchstart', () => {
       touchActive = true;
       hovered = false;
@@ -315,52 +344,85 @@
       clearSettleTimer();
       stopGliding();
     }, { passive: true });
+
     carousel.addEventListener('touchend', () => {
       touchActive = false;
       pointerActive = false;
-      settleInteraction();
     }, { passive: true });
+
     carousel.addEventListener('touchcancel', () => {
       touchActive = false;
       pointerActive = false;
-      settleInteraction();
     }, { passive: true });
+
+    // Distinguish programmatic glide scroll from genuine user swipe/touchpad scroll
     track.addEventListener('scroll', () => {
-      if (animationFrame) return;
+      if (isGlidingScroll) {
+        isGlidingScroll = false;
+        return;
+      }
+
+      // Real user scroll (touch swipe, trackpad, mouse wheel, or scrollbar drag)
       userInteracting = true;
       stopGliding();
-      if (!pointerActive) settleInteraction();
+      clearSettleTimer();
+
+      // Debounce scroll settle to let mobile inertia/momentum finish completely
+      scrollEndTimer = window.setTimeout(() => {
+        if (pointerActive || touchActive) return;
+        normalizeLoopPosition();
+        motionPosition = track.scrollLeft;
+        syncPosition();
+        userInteracting = false;
+        schedule();
+      }, 750);
     }, { passive: true });
+
     document.addEventListener('visibilitychange', schedule);
+
     motion.addEventListener('change', () => {
       stopGliding();
-      measureRibbonSpeed();
       if (motion.matches && positions.length) {
         track.scrollTo({ left: positions[virtualIndex], behavior: 'instant' });
-        status.textContent = 'Automatic movement is off because reduced motion is enabled.';
+        if (status) status.textContent = 'Automatic movement is off because reduced motion is enabled.';
       } else {
-        status.textContent = 'Automatic movement is on.';
+        if (status) status.textContent = 'Automatic movement is on.';
       }
       updateControls();
       schedule();
     });
 
     function measure() {
+      const currentWidth = track.clientWidth;
+      const widthChanged = Math.abs(currentWidth - lastMeasuredWidth) > 2;
+
+      // Avoid jumping when only viewport height changes (e.g. mobile address bar show/hide)
+      if (initialized && !widthChanged) return;
+      lastMeasuredWidth = currentWidth;
+
       const origin = track.getBoundingClientRect().left;
       positions = cards.map(card => card.getBoundingClientRect().left - origin + track.scrollLeft);
       cycleDistance = items.length > 1 && positions.length > cycleEnd
         ? positions[cycleEnd] - positions[cycleStart]
         : 0;
-      measureRibbonSpeed();
+
+      if (typeof window.COGNIZANCE_GALLERY_SPEED !== 'number') {
+        pixelsPerSecond = window.innerWidth <= 768 ? 75 : 85;
+      }
+
       if (!positions.length) positions = [0];
 
       if (!initialized) {
         const initialPosition = items.length > 1 ? positions[cycleStart] : positions[0];
         track.scrollTo({ left: initialPosition, behavior: 'instant' });
+        motionPosition = initialPosition;
         initialized = true;
       } else if (items.length > 1 && cycleDistance > 0) {
-        track.scrollTo({ left: positions[cycleStart + index], behavior: 'instant' });
+        const targetPos = positions[cycleStart + index] || positions[cycleStart];
+        track.scrollTo({ left: targetPos, behavior: 'instant' });
+        motionPosition = targetPos;
       }
+
       syncPosition();
       updateControls();
       schedule();
@@ -370,15 +432,16 @@
       const observer = new IntersectionObserver(entries => {
         inView = entries[0].isIntersecting;
         schedule();
-      }, { threshold: 0.25 });
-      observer.observe(track);
+      }, { threshold: 0.15 });
+      observer.observe(carousel);
     }
+
     if ('ResizeObserver' in window) {
       new ResizeObserver(measure).observe(track);
-      if (ribbonTrack) new ResizeObserver(measureRibbonSpeed).observe(ribbonTrack);
     } else {
       window.addEventListener('resize', measure);
     }
+
     measure();
   }
 
