@@ -991,3 +991,90 @@
 @media (max-width: 760px) {
   .photo-no-break { white-space: nowrap; }
 }
+
+
+/* =====================================================================
+   SECTION 01 — MALAYALAM TYPOGRAPHY & COLOR HARMONY
+   Tailored line-height, letter-spacing, and warm festival color palette
+   ===================================================================== */
+.about-malayalam {
+  font-family: 'Manjari', 'Gayathri', 'Noto Sans Malayalam', sans-serif;
+}
+
+.eyebrow--malayalam {
+  font-family: 'Manjari', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  letter-spacing: 1.2px !important;
+  color: var(--coral, #ee654d) !important;
+  margin-bottom: 22px;
+}
+
+.about-title--malayalam {
+  font-family: 'Gayathri', 'Manjari', sans-serif !important;
+  font-size: clamp(28px, 3.8vw, 46px) !important;
+  font-weight: 700 !important;
+  line-height: 1.45 !important;
+  letter-spacing: -0.4px !important;
+}
+
+.about-title--malayalam .mal-line-1 {
+  color: var(--ink, #292535);
+  font-weight: 700;
+}
+
+.about-title--malayalam .mal-line-2 {
+  color: #be462f;
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.about-copy--malayalam {
+  font-family: 'Manjari', 'Noto Sans Malayalam', sans-serif;
+}
+
+.about-copy--malayalam .mal-lead {
+  font-size: 16.5px !important;
+  font-weight: 500;
+  line-height: 1.9 !important;
+  color: #24202e;
+}
+
+.about-copy--malayalam .mal-muted {
+  font-size: 15px !important;
+  font-weight: 400;
+  line-height: 1.9 !important;
+  color: #5d5668;
+  margin-top: 16px;
+}
+
+.inline-tag--malayalam {
+  font-family: 'Manjari', sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  color: #8b3223 !important;
+  border-bottom: 2px solid #dfd1c5 !important;
+  padding-bottom: 6px;
+  display: inline-block;
+  margin-top: 24px;
+}
+
+@media (max-width: 760px) {
+  .about-title--malayalam {
+    font-size: clamp(24px, 6.8vw, 34px) !important;
+    line-height: 1.4 !important;
+  }
+  .about-copy--malayalam .mal-lead {
+    font-size: 15.5px !important;
+    line-height: 1.8 !important;
+  }
+  .about-copy--malayalam .mal-muted {
+    font-size: 14px !important;
+    line-height: 1.8 !important;
+  }
+  .inline-tag--malayalam {
+    font-size: 12px !important;
+  }
+}
