@@ -1,0 +1,298 @@
+/* =====================================================================
+   COGNIZANCE — 3D Coverflow / Stacked Video Carousel
+   Center item: scale(1), highest z-index, fully visible, interactive
+   Side items: scale(0.85), lower z-index, 3D perspective depth & shadows
+   Smooth 0.4s ease-in-out transitions on all step changes
+   ===================================================================== */
+
+/* Center heading variant */
+.section-heading--center {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.section-heading--center .section-intro {
+  max-width: 520px;
+  text-align: center;
+  margin-top: 14px;
+}
+
+/* Coverflow container */
+.yt-coverflow {
+  position: relative;
+  width: 100%;
+  margin-top: 48px;
+  overflow: hidden;
+  padding: 16px 0 28px;
+  user-select: none;
+}
+
+/* 3D Stage with perspective */
+.yt-coverflow__stage {
+  position: relative;
+  width: 100%;
+  height: clamp(250px, 34vw, 360px);
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+/* Step distances for 3D placement */
+:root {
+  --yt-offset-1: 220px;
+  --yt-offset-2: 380px;
+  --yt-offset-3: 490px;
+}
+@media (max-width: 1100px) {
+  :root {
+    --yt-offset-1: 175px;
+    --yt-offset-2: 300px;
+    --yt-offset-3: 390px;
+  }
+}
+@media (max-width: 760px) {
+  :root {
+    --yt-offset-1: 100px;
+    --yt-offset-2: 170px;
+    --yt-offset-3: 230px;
+  }
+}
+@media (max-width: 480px) {
+  :root {
+    --yt-offset-1: 65px;
+    --yt-offset-2: 115px;
+    --yt-offset-3: 160px;
+  }
+}
+
+/* Base card styling */
+.yt-card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(520px, 68vw);
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--ink, #292535);
+  text-decoration: none;
+  cursor: pointer;
+  transform-origin: center center;
+  will-change: transform, opacity, box-shadow, z-index;
+  transition: transform 0.4s ease-in-out,
+              opacity 0.4s ease-in-out,
+              box-shadow 0.4s ease-in-out,
+              filter 0.4s ease-in-out,
+              z-index 0.4s ease-in-out;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* ── 3D Step Positions ── */
+
+/* Active Center Item: scale 1, highest z-index, fully visible */
+.yt-card.is-center {
+  transform: translateX(-50%) translateZ(60px) scale(1);
+  z-index: 10;
+  opacity: 1;
+  filter: none;
+  box-shadow: 0 20px 48px rgba(15, 12, 25, 0.4),
+              0 2px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Immediate Left Item: scale 0.85, lower z-index, slight drop shadow */
+.yt-card.is-left-1 {
+  transform: translateX(calc(-50% - var(--yt-offset-1))) translateZ(0px) scale(0.85);
+  z-index: 8;
+  opacity: 0.88;
+  filter: brightness(0.82);
+  box-shadow: -10px 14px 34px rgba(15, 12, 25, 0.35);
+  pointer-events: auto;
+}
+
+/* Immediate Right Item: scale 0.85, lower z-index, slight drop shadow */
+.yt-card.is-right-1 {
+  transform: translateX(calc(-50% + var(--yt-offset-1))) translateZ(0px) scale(0.85);
+  z-index: 8;
+  opacity: 0.88;
+  filter: brightness(0.82);
+  box-shadow: 10px 14px 34px rgba(15, 12, 25, 0.35);
+  pointer-events: auto;
+}
+
+/* 2nd Left Item (outer step) */
+.yt-card.is-left-2 {
+  transform: translateX(calc(-50% - var(--yt-offset-2))) translateZ(-60px) scale(0.72);
+  z-index: 6;
+  opacity: 0.55;
+  filter: brightness(0.68);
+  box-shadow: -6px 10px 22px rgba(15, 12, 25, 0.25);
+  pointer-events: auto;
+}
+
+/* 2nd Right Item (outer step) */
+.yt-card.is-right-2 {
+  transform: translateX(calc(-50% + var(--yt-offset-2))) translateZ(-60px) scale(0.72);
+  z-index: 6;
+  opacity: 0.55;
+  filter: brightness(0.68);
+  box-shadow: 6px 10px 22px rgba(15, 12, 25, 0.25);
+  pointer-events: auto;
+}
+
+/* Hidden Background Items (left and right) */
+.yt-card.is-left-hidden {
+  transform: translateX(calc(-50% - var(--yt-offset-3))) translateZ(-120px) scale(0.58);
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+.yt-card.is-right-hidden {
+  transform: translateX(calc(-50% + var(--yt-offset-3))) translateZ(-120px) scale(0.58);
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Interactive hover on side cards: subtle brighten to cue clickability */
+.yt-card.is-left-1:hover,
+.yt-card.is-right-1:hover {
+  filter: brightness(0.95);
+}
+.yt-card.is-left-2:hover,
+.yt-card.is-right-2:hover {
+  filter: brightness(0.8);
+}
+
+/* Thumbnail image inside card */
+.yt-card__thumb {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #14111d;
+}
+.yt-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  display: block;
+}
+.yt-card.is-center:hover .yt-card__thumb img {
+  transform: scale(1.04);
+}
+
+/* Play button overlay */
+.yt-card__play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 2;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.yt-card__play svg {
+  width: 64px;
+  height: 45px;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.5));
+  opacity: 0.92;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.yt-card.is-center:hover .yt-card__play svg {
+  transform: scale(1.14);
+  opacity: 1;
+}
+.yt-card:not(.is-center) .yt-card__play svg {
+  opacity: 0.65;
+  transform: scale(0.86);
+}
+
+/* ── Navigation Controls ── */
+.yt-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+/* Circular Prev / Next buttons */
+.yt-carousel__btn {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line, #d9d4c9);
+  background: var(--paper, #f6f3e9);
+  color: var(--ink, #292535);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(41, 37, 53, 0.06);
+}
+.yt-carousel__btn:hover {
+  background: var(--ink, #292535);
+  color: var(--paper, #f6f3e9);
+  border-color: var(--ink, #292535);
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(41, 37, 53, 0.18);
+}
+.yt-carousel__btn:active {
+  transform: scale(0.96);
+}
+.yt-carousel__btn svg {
+  display: block;
+}
+
+/* ── Responsive adjustments ── */
+@media (max-width: 760px) {
+  .section-heading--center {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .section-heading--center .section-intro {
+    text-align: left;
+  }
+  .yt-card {
+    width: min(440px, 78vw);
+    border-radius: 12px;
+  }
+  .yt-coverflow__stage {
+    height: clamp(210px, 46vw, 280px);
+  }
+  .yt-carousel__btn {
+    width: 42px;
+    height: 42px;
+  }
+  .yt-carousel__controls {
+    margin-top: 24px;
+    gap: 14px;
+  }
+}
+@media (max-width: 480px) {
+  .yt-card {
+    width: 82vw;
+  }
+  .yt-card__play svg {
+    width: 52px;
+    height: 38px;
+  }
+}
+
+/* Accessibility: respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .yt-card,
+  .yt-card__thumb img,
+  .yt-card__play svg,
+  .yt-carousel__btn {
+    transition: none !important;
+  }
+}

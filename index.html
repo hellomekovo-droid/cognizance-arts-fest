@@ -9,10 +9,12 @@
     content="Explore programs, results and festival moments from Cognizance, the student arts festival.">
   <title>Cognizance — A celebration of possibility</title>
   <link rel="icon" type="image/png" sizes="128x128" href="assets/brand/cognizance-favicon.png">
-  <link rel="stylesheet" href="assets/css/styles.css?v=202611011030">
-  <link rel="stylesheet" href="assets/css/gallery.css?v=202611011030">
-  <script src="assets/js/app.js?v=202611011030" defer></script>
-  <script src="assets/js/gallery.js?v=202611011042" defer></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=202611031215">
+  <link rel="stylesheet" href="assets/css/gallery.css?v=202611031255">
+  <link rel="stylesheet" href="assets/css/yt-carousel.css?v=202611031247">
+  <script src="assets/js/app.js?v=202611031215" defer></script>
+  <script src="assets/js/gallery.js?v=202611031215" defer></script>
+  <script src="assets/js/yt-carousel.js?v=202611031252" defer></script>
   <script src="assets/js/theme-reset.js"></script>
 
 </head>
@@ -317,75 +319,76 @@
 
     <section id="programs" class="program-section section" aria-labelledby="program-title">
       <div class="wrap">
-        <div class="section-heading">
+        <div class="section-heading section-heading--center">
           <div>
             <p class="eyebrow">02 / FIND THEIR MOMENT</p>
             <h2 id="program-title">So many ways<br>to <em>shine.</em></h2>
           </div>
-          <p class="section-intro">Discover the creative side of Cognizance.<br><span class="muted">Demo filters and
-              cards only—not announced programs.</span></p>
+          <p class="section-intro">Discover the creative side of Cognizance through our highlights.<br><span class="muted">Watch the best moments from our arts fest.</span></p>
         </div>
-        <div class="program-toolbar">
-          <div class="chips" role="group" aria-label="Filter sample program categories"><button class="chip active"
-              data-program="all" aria-pressed="true">All categories</button><button class="chip" data-program="stage"
-              aria-pressed="false">On stage</button><button class="chip" data-program="art" aria-pressed="false">Visual
-              arts</button><button class="chip" data-program="music" aria-pressed="false">Music</button></div><label
-            class="search"><span class="sr-only">Search sample categories</span><input id="program-search" type="search"
-              placeholder="Search sample categories"><span aria-hidden="true">⌕</span></label>
+
+        <!-- 3D Coverflow Video Carousel -->
+        <div class="yt-coverflow" role="region" aria-roledescription="carousel" aria-label="YouTube video highlights">
+          <div class="yt-coverflow__stage" id="yt-stage" tabindex="0" aria-label="Swipe or click cards to navigate videos">
+            <a class="yt-card is-center" href="https://youtu.be/AHa0LpXiMnQ?si=Lv694P6ulC2tIFAc" target="_blank" rel="noopener noreferrer" data-video-id="AHa0LpXiMnQ" data-index="0" aria-label="Play Cognizance highlight video 1">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/AHa0LpXiMnQ/maxresdefault.jpg" alt="Cognizance highlight video 1" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+            <a class="yt-card is-right-1" href="https://youtu.be/WzdIYM6yZiA?si=F123qtb3v6hkLJ30" target="_blank" rel="noopener noreferrer" data-video-id="WzdIYM6yZiA" data-index="1" aria-label="Play Cognizance highlight video 2">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/WzdIYM6yZiA/maxresdefault.jpg" alt="Cognizance highlight video 2" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+            <a class="yt-card is-right-2" href="https://youtu.be/10TjVAVfH8c?si=liDKqPpEIuIeQ8NY" target="_blank" rel="noopener noreferrer" data-video-id="10TjVAVfH8c" data-index="2" aria-label="Play Cognizance highlight video 3">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/10TjVAVfH8c/maxresdefault.jpg" alt="Cognizance highlight video 3" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+            <a class="yt-card is-right-hidden" href="https://youtu.be/3khrnC0X85o?si=hPfW0bfB9sQ4m86h" target="_blank" rel="noopener noreferrer" data-video-id="3khrnC0X85o" data-index="3" aria-label="Play Cognizance highlight video 4">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/3khrnC0X85o/maxresdefault.jpg" alt="Cognizance highlight video 4" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+            <a class="yt-card is-left-hidden" href="https://youtu.be/52VhElU4rj4?si=knazB-byGAKJlOwq" target="_blank" rel="noopener noreferrer" data-video-id="52VhElU4rj4" data-index="4" aria-label="Play Cognizance highlight video 5">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/52VhElU4rj4/maxresdefault.jpg" alt="Cognizance highlight video 5" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+            <a class="yt-card is-left-2" href="https://youtu.be/_lETW15tH1A?si=RHkQsxqS31vWJIim" target="_blank" rel="noopener noreferrer" data-video-id="_lETW15tH1A" data-index="5" aria-label="Play Cognizance highlight video 6">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/_lETW15tH1A/maxresdefault.jpg" alt="Cognizance highlight video 6" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+            <a class="yt-card is-left-1" href="https://youtu.be/fZuuLsWlS88?si=S3diyzcM6kDx4eBa" target="_blank" rel="noopener noreferrer" data-video-id="fZuuLsWlS88" data-index="6" aria-label="Play Cognizance highlight video 7">
+              <div class="yt-card__thumb">
+                <img src="https://img.youtube.com/vi/fZuuLsWlS88/maxresdefault.jpg" alt="Cognizance highlight video 7" loading="lazy" width="1280" height="720">
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            </a>
+          </div>
         </div>
-        <p id="program-count" class="result-count" aria-live="polite">3 sample programs · official lineup coming soon
-        </p>
-        <div class="program-grid">
-          <article class="program-card" data-category="stage" data-title="Stage and expression">
-            <div class="program-art coral"><span class="abstract-curtain" aria-hidden="true"></span><span
-                class="sample-label">SAMPLE CATEGORY</span><span class="art-number">01</span></div>
-            <div class="program-body">
-              <p class="eyebrow">ON STAGE</p>
-              <h3>Sample program</h3>
-              <p>Program description goes here.</p>
-              <p class="sample-program-meta">Time and venue to be added.</p>
-              <details>
-                <summary>About this preview <span aria-hidden="true">+</span></summary>
-                <p>This is a sample category, not a confirmed Cognizance program. Approved program names, times, and
-                  locations will replace it.</p>
-              </details>
-            </div>
-          </article>
-          <article class="program-card" data-category="art" data-title="Art and imagination">
-            <div class="program-art purple"><span class="abstract-flower" aria-hidden="true">✳</span><span
-                class="sample-label">SAMPLE CATEGORY</span><span class="art-number">02</span></div>
-            <div class="program-body">
-              <p class="eyebrow">VISUAL ARTS</p>
-              <h3>Sample program</h3>
-              <p>Program description goes here.</p>
-              <p class="sample-program-meta">Time and venue to be added.</p>
-              <details>
-                <summary>About this preview <span aria-hidden="true">+</span></summary>
-                <p>This is a sample category only. Official art programs and participation details have not been
-                  provided.</p>
-              </details>
-            </div>
-          </article>
-          <article class="program-card" data-category="music" data-title="Music and rhythm">
-            <div class="program-art lime"><span class="abstract-music" aria-hidden="true">♪</span><span
-                class="sample-label">SAMPLE CATEGORY</span><span class="art-number">03</span></div>
-            <div class="program-body">
-              <p class="eyebrow">MUSIC</p>
-              <h3>Sample program</h3>
-              <p>Program description goes here.</p>
-              <p class="sample-program-meta">Time and venue to be added.</p>
-              <details>
-                <summary>About this preview <span aria-hidden="true">+</span></summary>
-                <p>This is an illustrative category. No performance titles, student names, or music programs are
-                  confirmed.</p>
-              </details>
-            </div>
-          </article>
-        </div>
-        <div id="program-empty" class="empty-search" hidden>No sample categories match. <button id="clear-program"
-            class="text-link">Clear filters</button></div>
-        <p class="small-note">Official program names, schedules, and locations will appear after the organizing team
-          confirms them.</p>
+
       </div>
     </section>
     <section id="results" class="wrap section results-section" aria-labelledby="results-title">
@@ -509,14 +512,6 @@
           <div class="gallery-photo">
             <img src="assets/images/photos/94e13c19523b14bd77d13f40_IMG-20251004-WA0071.jpg" alt="Performers dance with long ribbons on a blue-lit Cognizance ’25 stage." loading="lazy" width="2560" height="1706">
           </div>
-        </div>
-        <div class="gallery-controls" aria-label="Photo controls">
-          <button class="gallery-control" id="gallery-prev" type="button" aria-label="Previous photo" aria-controls="gallery-track" disabled>
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>
-          </button>
-          <button class="gallery-control" id="gallery-next" type="button" aria-label="Next photo" aria-controls="gallery-track">
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>
-          </button>
         </div>
         <p id="gallery-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
       </div>

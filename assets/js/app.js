@@ -63,17 +63,11 @@ function initSiteMenu() {
 }
 initSiteMenu();
 
-let category = 'all';
-function filterPrograms() {const query = $('#program-search').value.trim().toLowerCase(); let count = 0; $$('.program-card').forEach(card => {const visible = (category === 'all' || category === card.dataset.category) && card.textContent.toLowerCase().includes(query); card.hidden = !visible; if (visible) count++;}); $('#program-count').textContent = `${count} sample program${count === 1 ? '' : 's'} · official lineup coming soon`; $('#program-empty').hidden = count !== 0;}
-$$('[data-program]').forEach(button => button.addEventListener('click', () => {category = button.dataset.program; $$('[data-program]').forEach(item => {const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected));}); filterPrograms();}));
-$('#program-search').addEventListener('input', filterPrograms);
-$('#clear-program').addEventListener('click', () => {$('#program-search').value = ''; $('[data-program="all"]').click(); $('#program-search').focus();});
 $('#result-search').addEventListener('input', event => {const searching = event.target.value.trim().length > 0; $('#result-message').textContent = searching ? 'No official results are available to search yet.' : 'Their moment is worth waiting for.'; $('#result-detail').textContent = searching ? 'The row above is a labeled placeholder, not a published result. Verified results will be searchable once approved.' : 'Verified results will appear here once approved by the organizing team.';});
 let galleryFilter = 'all';
 $$('[data-gallery]').forEach(button => button.addEventListener('click', () => {galleryFilter = button.dataset.gallery; $$('[data-gallery]').forEach(item => {const selected = item === button; item.classList.toggle('active', selected); item.setAttribute('aria-pressed', String(selected));}); let count = 0; $$('.photo-tile').forEach(tile => {tile.hidden = galleryFilter !== 'all' && tile.dataset.category !== galleryFilter; if (!tile.hidden) count++;}); $('#photo-count').textContent = `${count} festival photo${count === 1 ? '' : 's'}`;}));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 if ('IntersectionObserver' in window) {const activeSections = new IntersectionObserver(entries => entries.forEach(entry => {if (entry.isIntersecting) {$$('.site-menu-link, .desktop-nav a, .mobile-quick a').forEach(link => {const active = link.hash === '#' + entry.target.id; link.classList.toggle('current', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');});}}), {rootMargin:'-20% 0px -55% 0px', threshold:0}); $$('main section[id]').forEach(section => activeSections.observe(section));}
-filterPrograms();
 
 
 // ==============================================================

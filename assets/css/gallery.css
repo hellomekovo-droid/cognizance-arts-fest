@@ -1,9 +1,18 @@
 /* Gallery-only styling. Hardware accelerated, silky smooth mobile and desktop experience */
-.gallery-carousel { min-width: 0; background: var(--paper); contain: layout; }
+.gallery-section {
+  padding-block: 75px 85px;
+}
+
+.gallery-carousel {
+  min-width: 0;
+  background: var(--paper);
+  contain: layout;
+}
+
 .gallery-track {
   position: relative;
   display: flex;
-  gap: 22px;
+  gap: 20px;
   width: 100%;
   min-width: 0;
   overflow-x: auto;
@@ -15,24 +24,42 @@
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
+  padding-block: 8px 16px;
 }
+
 .gallery-track:active {
   cursor: grabbing;
 }
-.gallery-track::-webkit-scrollbar { display: none; }
-.gallery-track:focus-visible { outline: 3px solid #7040a3; outline-offset: 6px; border-radius: 12px; }
+
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-track:focus-visible {
+  outline: 3px solid #7040a3;
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+/* Sized comfortably for laptops and desktops: multiple photos visible at once, compact height */
 .gallery-photo {
-  flex: 0 0 82%;
+  flex: 0 0 clamp(320px, 30vw, 420px);
   min-width: 0;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: 12px;
   background: #e7e1d6;
   contain: layout paint;
   transform: translateZ(0);
+  box-shadow: 0 6px 20px rgba(41, 37, 53, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-/* Leave a little runway after the final loop copy so the strip never feels clipped. */
-.gallery-photo:last-child { margin-right: 18%; }
+
+.gallery-photo:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(41, 37, 53, 0.14);
+}
+
 .gallery-photo > img {
   width: 100%;
   height: 100%;
@@ -40,33 +67,41 @@
   pointer-events: none;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  transition: transform 0.35s ease;
 }
-.gallery-controls { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 22px; }
-.gallery-control {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  min-width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--ink);
-  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+
+.gallery-photo:hover > img {
+  transform: scale(1.03);
 }
-.gallery-control svg { fill: none; stroke: currentColor; stroke-width: 1.5; }
-.gallery-control:not(:disabled):hover { background: #eeeadf; border-color: #a9a193; transform: scale(1.05); }
-.gallery-control:not(:disabled):active { transform: scale(0.96); }
-.gallery-controls[hidden] { display: none; }
+
+@media (max-width: 1100px) {
+  .gallery-photo {
+    flex: 0 0 clamp(290px, 38vw, 360px);
+    aspect-ratio: 16 / 10;
+  }
+}
+
 @media (max-width: 760px) {
-  .gallery-track { gap: 14px; }
-  .gallery-photo { flex-basis: 88%; border-radius: 10px; }
-  .gallery-photo:last-child { margin-right: 12%; }
-  .gallery-controls { margin-top: 18px; }
+  .gallery-section {
+    padding-block: 55px 65px;
+  }
+  .gallery-track {
+    gap: 14px;
+    padding-block: 4px 10px;
+  }
+  .gallery-photo {
+    flex: 0 0 78%;
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+  }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .gallery-track { scroll-behavior: auto !important; }
-  .gallery-control { transition: none; }
+  .gallery-track {
+    scroll-behavior: auto !important;
+  }
+  .gallery-photo,
+  .gallery-photo > img {
+    transition: none !important;
+  }
 }
