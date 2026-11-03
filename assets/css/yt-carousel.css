@@ -2,7 +2,7 @@
    COGNIZANCE — 3D Coverflow / Stacked Video Carousel
    Center item: scale(1), highest z-index, fully visible, interactive
    Side items: scale(0.85), lower z-index, 3D perspective depth & shadows
-   Smooth 0.4s ease-in-out transitions on all step changes
+   Mobile optimized: side cards peek out with responsive vw offsets
    ===================================================================== */
 
 /* Center heading variant */
@@ -21,24 +21,30 @@
 .yt-coverflow {
   position: relative;
   width: 100%;
-  margin-top: 48px;
+  margin-top: 40px;
   overflow: hidden;
-  padding: 16px 0 28px;
+  padding: 10px 0 20px;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-/* 3D Stage with perspective */
+/* 3D Stage with perspective & vertical pan gesture */
 .yt-coverflow__stage {
   position: relative;
   width: 100%;
-  height: clamp(250px, 34vw, 360px);
-  perspective: 1200px;
+  height: clamp(240px, 34vw, 350px);
+  perspective: 1100px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
   display: flex;
   align-items: center;
   justify-content: center;
   outline: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.yt-coverflow__stage:active {
+  cursor: grabbing;
 }
 
 /* Step distances for 3D placement */
@@ -49,23 +55,16 @@
 }
 @media (max-width: 1100px) {
   :root {
-    --yt-offset-1: 175px;
-    --yt-offset-2: 300px;
-    --yt-offset-3: 390px;
+    --yt-offset-1: 170px;
+    --yt-offset-2: 290px;
+    --yt-offset-3: 380px;
   }
 }
 @media (max-width: 760px) {
   :root {
-    --yt-offset-1: 100px;
-    --yt-offset-2: 170px;
-    --yt-offset-3: 230px;
-  }
-}
-@media (max-width: 480px) {
-  :root {
-    --yt-offset-1: 65px;
-    --yt-offset-2: 115px;
-    --yt-offset-3: 160px;
+    --yt-offset-1: 34vw;
+    --yt-offset-2: 54vw;
+    --yt-offset-3: 72vw;
   }
 }
 
@@ -74,9 +73,9 @@
   position: absolute;
   top: 0;
   left: 50%;
-  width: min(520px, 68vw);
+  width: min(520px, 66vw);
   aspect-ratio: 16 / 9;
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
   background: var(--ink, #292535);
   text-decoration: none;
@@ -100,7 +99,7 @@
   z-index: 10;
   opacity: 1;
   filter: none;
-  box-shadow: 0 20px 48px rgba(15, 12, 25, 0.4),
+  box-shadow: 0 18px 45px rgba(15, 12, 25, 0.42),
               0 2px 10px rgba(0, 0, 0, 0.2);
   pointer-events: auto;
   cursor: pointer;
@@ -112,7 +111,7 @@
   z-index: 8;
   opacity: 0.88;
   filter: brightness(0.82);
-  box-shadow: -10px 14px 34px rgba(15, 12, 25, 0.35);
+  box-shadow: -8px 12px 30px rgba(15, 12, 25, 0.35);
   pointer-events: auto;
 }
 
@@ -122,7 +121,7 @@
   z-index: 8;
   opacity: 0.88;
   filter: brightness(0.82);
-  box-shadow: 10px 14px 34px rgba(15, 12, 25, 0.35);
+  box-shadow: 8px 12px 30px rgba(15, 12, 25, 0.35);
   pointer-events: auto;
 }
 
@@ -130,9 +129,9 @@
 .yt-card.is-left-2 {
   transform: translateX(calc(-50% - var(--yt-offset-2))) translateZ(-60px) scale(0.72);
   z-index: 6;
-  opacity: 0.55;
+  opacity: 0.52;
   filter: brightness(0.68);
-  box-shadow: -6px 10px 22px rgba(15, 12, 25, 0.25);
+  box-shadow: -6px 8px 20px rgba(15, 12, 25, 0.25);
   pointer-events: auto;
 }
 
@@ -140,9 +139,9 @@
 .yt-card.is-right-2 {
   transform: translateX(calc(-50% + var(--yt-offset-2))) translateZ(-60px) scale(0.72);
   z-index: 6;
-  opacity: 0.55;
+  opacity: 0.52;
   filter: brightness(0.68);
-  box-shadow: 6px 10px 22px rgba(15, 12, 25, 0.25);
+  box-shadow: 6px 8px 20px rgba(15, 12, 25, 0.25);
   pointer-events: auto;
 }
 
@@ -203,7 +202,7 @@
   width: 64px;
   height: 45px;
   filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.5));
-  opacity: 0.92;
+  opacity: 0.94;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 .yt-card.is-center:hover .yt-card__play svg {
@@ -220,23 +219,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  margin-top: 32px;
+  gap: 16px;
+  margin-top: 26px;
 }
 
 /* Circular Prev / Next buttons */
 .yt-carousel__btn {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   border: 1.5px solid var(--line, #d9d4c9);
   background: var(--paper, #f6f3e9);
   color: var(--ink, #292535);
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 8px rgba(41, 37, 53, 0.06);
+  box-shadow: 0 2px 8px rgba(41, 37, 53, 0.08);
 }
 .yt-carousel__btn:hover {
   background: var(--ink, #292535);
@@ -252,7 +251,7 @@
   display: block;
 }
 
-/* ── Responsive adjustments ── */
+/* ── Mobile adjustments ── */
 @media (max-width: 760px) {
   .section-heading--center {
     align-items: flex-start;
@@ -261,29 +260,28 @@
   .section-heading--center .section-intro {
     text-align: left;
   }
-  .yt-card {
-    width: min(440px, 78vw);
-    border-radius: 12px;
+  .yt-coverflow {
+    margin-top: 28px;
+    padding-bottom: 12px;
   }
   .yt-coverflow__stage {
-    height: clamp(210px, 46vw, 280px);
+    height: clamp(210px, 46vw, 270px);
+  }
+  .yt-card {
+    width: 72vw;
+    border-radius: 12px;
+  }
+  .yt-card__play svg {
+    width: 50px;
+    height: 36px;
+  }
+  .yt-carousel__controls {
+    margin-top: 20px;
+    gap: 14px;
   }
   .yt-carousel__btn {
     width: 42px;
     height: 42px;
-  }
-  .yt-carousel__controls {
-    margin-top: 24px;
-    gap: 14px;
-  }
-}
-@media (max-width: 480px) {
-  .yt-card {
-    width: 82vw;
-  }
-  .yt-card__play svg {
-    width: 52px;
-    height: 38px;
   }
 }
 

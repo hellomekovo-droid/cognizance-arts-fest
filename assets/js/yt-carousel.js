@@ -1,7 +1,7 @@
 /* =====================================================================
    COGNIZANCE — 3D Coverflow Video Carousel Controller
    Smooth 3D stacked coverflow navigation with interactive card selection,
-   infinite wrap-around, touch gestures, keyboard arrows, and auto-play
+   infinite wrap-around, responsive mobile touch gestures, and buttons
    ===================================================================== */
 'use strict';
 
@@ -14,18 +14,6 @@
   const cards = [...stage.querySelectorAll('.yt-card')];
   const totalCards = cards.length;
   if (totalCards === 0) return;
-
-  // High-res thumbnail fallback (if YouTube throttles maxresdefault, seamlessly use hqdefault)
-  cards.forEach(card => {
-    const img = card.querySelector('img');
-    if (img) {
-      img.addEventListener('error', () => {
-        if (img.src.includes('maxresdefault.jpg')) {
-          img.src = img.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
-        }
-      });
-    }
-  });
 
   let currentIndex = 0;
   let autoPlayTimer = null;
@@ -102,7 +90,7 @@
     resetAutoPlay();
   }
 
-  // Navigation button clicks (if buttons present)
+  // Navigation button clicks
   if (nextBtn) {
     nextBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -129,7 +117,7 @@
     });
   });
 
-  // Keyboard navigation on stage and cards
+  // Keyboard navigation on stage
   stage.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
@@ -140,25 +128,31 @@
     }
   });
 
-  // Touch Swipe Support (Mobile & Tablets)
+  // Mobile Touch Gestures (reliable swipe detection)
   let touchStartX = 0;
   let touchStartY = 0;
+  let touchStartTime = 0;
 
   stage.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
+    if (!e.touches || !e.touches[0]) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
     if (autoPlayTimer) clearInterval(autoPlayTimer);
   }, { passive: true });
 
   stage.addEventListener('touchend', (e) => {
-    const deltaX = e.changedTouches[0].screenX - touchStartX;
-    const deltaY = e.changedTouches[0].screenY - touchStartY;
-    // Ensure horizontal gesture is dominant
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+    if (!e.changedTouches || !e.changedTouches[0]) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    const duration = Date.now() - touchStartTime;
+
+    // Detect horizontal swipe (horizontal distance > vertical and > 30px)
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30 && duration < 800) {
       if (deltaX < 0) nextSlide();
       else prevSlide();
     }
-    setTimeout(startAutoPlay, 1500);
+    setTimeout(startAutoPlay, 2000);
   }, { passive: true });
 
   // Auto-play timer
