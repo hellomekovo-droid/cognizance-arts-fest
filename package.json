@@ -4,9 +4,9 @@
   "description": "Cognizance Arts Fest - Official Website",
   "private": true,
   "scripts": {
-    "dev": "npx serve -l 5500 .",
-    "start": "npx serve -l 5500 .",
-    "serve": "npx serve -l 5500 ."
+    "dev": "npx -y serve -l 5500 .",
+    "start": "npx -y serve -l 5500 .",
+    "serve": "npx -y serve -l 5500 ."
   },
   "keywords": [
     "cognizance",
