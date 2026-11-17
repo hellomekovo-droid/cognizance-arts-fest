@@ -1,0 +1,208 @@
+/* ============================================================
+   Program Results Accordion — Cognizance Arts Fest
+   ============================================================ */
+
+.prog-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+/* Each accordion item */
+.prog-result-item {
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s;
+}
+.prog-result-item:hover {
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+}
+
+/* Header button */
+.prog-result-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.prog-result-header:hover {
+  background: #faf7f2;
+}
+.prog-result-header[aria-expanded="true"] {
+  background: #fdf5ec;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.prog-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.prog-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.prog-cat-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: #f0ebe3;
+  color: #7a5c3a;
+  border-radius: 20px;
+  padding: 0.2em 0.75em;
+}
+
+.prog-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.prog-top-team {
+  font-size: 0.82rem;
+  color: #555;
+}
+
+.prog-score-pill {
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: #eef4ff;
+  color: #2d5fc4;
+  border-radius: 20px;
+  padding: 0.2em 0.7em;
+}
+
+.prog-toggle-icon {
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: #aaa;
+  transition: transform 0.2s;
+  line-height: 1;
+  min-width: 1.2rem;
+  text-align: center;
+}
+.prog-result-header[aria-expanded="true"] .prog-toggle-icon {
+  transform: rotate(45deg);
+  color: #c0632a;
+}
+
+/* Expanded body */
+.prog-result-body {
+  padding: 1rem 1.25rem 1.25rem;
+  background: #fdf8f3;
+}
+.prog-result-body[hidden] { display: none; }
+
+/* Inner table — override global result-table-scroll min-width */
+.prog-result-body .result-table-scroll {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.08);
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Critically: cancel the global 760px min-width for our table */
+.prog-result-body .result-table-scroll table {
+  min-width: 0 !important;
+}
+
+.prog-result-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: #fff;
+  table-layout: fixed;
+}
+
+.prog-result-body thead th {
+  background: #f5f0e8;
+  padding: 0.6rem 0.9rem !important;
+  text-align: left;
+  font-size: 0.75rem !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b5744;
+  white-space: nowrap;
+}
+
+.prog-result-body thead th:last-child {
+  text-align: right;
+}
+
+.prog-result-body tbody td {
+  padding: 0.65rem 0.9rem !important;
+  border-top: 1px solid #f0ebe3;
+  color: #2a2a2a;
+  vertical-align: middle;
+  font-size: 0.88rem !important;
+}
+
+.rank-gold   td { background: #fffbea; }
+.rank-silver td { background: #f8f8f8; }
+.rank-bronze td { background: #fff7f3; }
+
+.rank-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Download button */
+.prog-result-actions {
+  margin-top: 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.prog-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55em 1.2em;
+  background: #c0632a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.prog-download-btn:hover  { background: #a3511f; }
+.prog-download-btn:active { transform: scale(0.97); }
+.prog-download-btn.downloading {
+  background: #888;
+  pointer-events: none;
+}
+
+/* Search box override for active state */
+#result-search:not(:disabled) {
+  opacity: 1;
+  cursor: text;
+}
+
+@media (max-width: 540px) {
+  .prog-result-header { flex-direction: column; align-items: flex-start; }
+  .prog-header-right  { flex-wrap: wrap; }
+}

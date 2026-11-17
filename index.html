@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 
 <head>
@@ -12,9 +12,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gayathri:wght@400;700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css?v=202611031345">
+  <link rel="stylesheet" href="assets/css/styles.css?v=202611180219">
   <link rel="stylesheet" href="assets/css/gallery.css?v=202611031255">
   <link rel="stylesheet" href="assets/css/yt-carousel.css?v=202611031325">
+  <link rel="stylesheet" href="assets/css/results.css?v=202611180005">
+  <link rel="stylesheet" href="assets/css/desktop-nav.css?v=202611180008">
   <script src="assets/js/app.js?v=202611031215" defer></script>
   <script src="assets/js/gallery.js?v=202611031215" defer></script>
   <script src="assets/js/yt-carousel.js?v=202611031325" defer></script>
@@ -29,6 +31,13 @@
       <img class="brand-logo" src="assets/brand/cognizance-students-arts-feast-26.png"
         alt="Cognizance Students arts feast ’26" width="1922" height="818">
     </a>
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#programs">Programs</a>
+      <a href="#results">Results</a>
+      <a href="#scores">Team Scores</a>
+      <a href="#photos">Gallery</a>
+      <a href="#videos">Videos</a>
+    </nav>
     <button class="site-menu-btn" id="menu-toggle" aria-expanded="false" aria-controls="site-menu-drawer"
       aria-label="Open menu">
       <span class="menu-lines" aria-hidden="true">
@@ -69,10 +78,6 @@
           <span class="link-num">05</span>
           <span class="link-label">Videos</span>
         </a>
-        <a href="#guide" class="site-menu-link site-menu-link--sub">
-          <span class="link-num">06</span>
-          <span class="link-label">Parent guide</span>
-        </a>
       </nav>
       <div class="site-menu-footer">
         <div class="menu-footer-badge">
@@ -85,9 +90,9 @@
   <main id="main">
     <section id="home" class="hero wrap" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">Small stages.<br>Extraordinary<br><span class="hero-word-slot" aria-hidden="true"><em
-              class="hero-word hero-word--possibilities">possibilities.</em><em
-              class="hero-word hero-word--creativity">creativity.</em></span><span class="sr-only">possibilities.</span>
+        <h1 id="hero-title">Unlocking potential.<br>Building<br><span class="hero-word-slot" aria-hidden="true"><em
+              class="hero-word hero-word--possibilities">future.</em><em
+              class="hero-word hero-word--creativity">dreams.</em></span><span class="sr-only">future.</span>
         </h1>
         <div class="event-details" aria-label="Event date and venue">
           <div class="event-card event-card--date">
@@ -314,7 +319,8 @@
     </div>
 
 
-    <section id="programs" class="program-section section" aria-labelledby="program-title">
+    <div id="programs"></div>
+    <section id="videos" class="program-section section" aria-labelledby="program-title">
       <div class="wrap">
         <div class="section-heading section-heading--center">
           <div>
@@ -401,51 +407,22 @@
           <p class="eyebrow">03 / EVERY ACHIEVEMENT MATTERS</p>
           <h2 id="results-title">Big efforts.<br><em>Proud moments.</em></h2>
         </div>
-        <p class="section-intro">A simple place to find published results.<br>No student names or results are published
-          in this preview.</p>
+        <p class="section-intro">Official results and student achievements from Cognizance Arts Fest.</p>
       </div>
       <div class="results-panel">
         <div class="results-toolbar">
-          <h3>Program results</h3><label class="search"><span class="sr-only">Search published results by program or
-              approved public student name</span><input id="result-search" type="search"
-              placeholder="Search available after results are added" disabled><span aria-hidden="true">⌕</span></label>
+          <h3>Program results</h3>
+          <label class="search">
+            <span class="sr-only">Search programs</span>
+            <input id="result-search" type="search" placeholder="Search programs…">
+            <span aria-hidden="true">⌕</span>
+          </label>
         </div>
-        <div class="table-placeholder">
-          <p class="small-note result-placeholder-label">SAMPLE RESULT LAYOUT · NOT PUBLISHED RESULTS</p>
-          <p class="result-layout-note">Find results by program and an approved public student identifier once verified
-            data is supplied. No student records are included here.</p>
-          <div class="result-table-scroll" role="region"
-            aria-label="Sample program results table; scroll horizontally on small screens" tabindex="0">
-            <table>
-              <caption class="sr-only">Reserved space for official program results. Every cell is a placeholder.
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">Program / category</th>
-                  <th scope="col">Approved public student ID</th>
-                  <th scope="col">Placing / award</th>
-                  <th scope="col">Team</th>
-                  <th scope="col">Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>To be added</td>
-                  <td>To be added</td>
-                  <td>To be added</td>
-                  <td>To be added</td>
-                  <td>To be added</td>
-                </tr>
-              </tbody>
-            </table>
+
+        <div class="prog-results-list" id="prog-results-list">
+          <div style="padding: 2.5rem 1rem; text-align: center; color: #888;">
+            <p style="font-size: 15px; margin: 0;">⏳ Loading results…</p>
           </div>
-          <p class="table-scroll-note">On smaller screens, scroll this table sideways to see every field.</p>
-        </div>
-        <div class="empty-state"><span class="empty-icon" aria-hidden="true">✧</span>
-          <p class="eyebrow">AWAITING OFFICIAL PUBLICATION</p>
-          <h3 id="result-message">Their moment is worth waiting for.</h3>
-          <p id="result-detail" aria-live="polite">Verified results will appear here once approved by the organizing
-            team.</p><a href="#guide" class="text-link">How results will be shared <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </section>
@@ -520,25 +497,24 @@
         <p id="gallery-status" class="sr-only" aria-live="polite" aria-atomic="true"></p>
       </div>
     </section>
-    <section id="videos" class="video-section section" aria-labelledby="videos-title">
-      <div class="wrap">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">06 / ENCORE, ANYTIME</p>
-            <h2 id="videos-title">Some moments<br>deserve a <em>replay.</em></h2>
-          </div>
-          <p class="section-intro">A space for approved performance highlights.<br>Videos will appear here after the
-            organizing team adds them.</p>
+    <section id="musk" class="wrap section musk-section" aria-labelledby="musk-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">MUSK · STUDENTS' UNION</p>
+          <h2 id="musk-title">Mahlara Union of<br><em>Students’ Keepers.</em></h2>
         </div>
-        <div class="video-placeholder">
-          <div class="media-coming-soon">Coming<br>soon</div>
-          <div>
-            <p class="eyebrow">YOUTUBE HIGHLIGHTS</p>
-            <h3>YouTube highlight to be added.</h3>
-            <p>Approved video links haven’t been added yet. Come back for captioned performances and festival
-              highlights.</p><span class="video-tag">Coming soon · Approved YouTube link required</span>
-          </div><span class="video-doodle" aria-hidden="true">✳</span>
+        <p class="section-intro">Connect with the official student union. Updates, Instagram page, and announcements.</p>
+      </div>
+      <div class="musk-card" style="background:#fff; border:1px solid rgba(0,0,0,0.08); border-radius:14px; padding:2.5rem 2rem; text-align:center; box-shadow:0 4px 20px rgba(0,0,0,0.04);">
+        <div style="width:64px; height:64px; margin:0 auto 1.25rem; border-radius:50%; background:linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); display:flex; align-items:center; justify-content:center; color:#fff;">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
         </div>
+        <h3 style="font-size:1.4rem; font-weight:700; color:#1a1a1a; margin-bottom:0.5rem;">MUSK Official Instagram</h3>
+        <p style="color:#666; font-size:0.95rem; max-width:440px; margin:0 auto 1.5rem;">Follow for festival updates, student union announcements, live stories, and highlights.</p>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.75rem; background:#1a1a1a; color:#fff; text-decoration:none; border-radius:30px; font-weight:600; font-size:0.92rem;">
+          <span>Visit Instagram</span>
+          <span aria-hidden="true">↗</span>
+        </a>
       </div>
     </section>
   </main>
@@ -573,6 +549,303 @@
     <div class="wrap footer-bottom"><span>Cognizance · Arts Fest</span><a href="#home">Back to top ↑</a></div>
     <div class="wrap credits">Photos: <span class="photo-no-break">Cognizance ’25</span> · <span class="photo-no-break">October 1–2, 2025</span> · <span class="photo-no-break">Mahlara Campus, Mavoor.</span></div>
   </footer>
+
+  <script>
+    /* ── Live Convex Results & Leaderboard Integration ── */
+    (function () {
+      const PROD_API = 'https://scrupulous-goldfish-520.convex.site/api/results';
+      const DEV_API  = 'https://outgoing-sandpiper-663.convex.site/api/results';
+
+      const listContainer = document.getElementById('prog-results-list');
+      const statusLabel   = document.getElementById('results-status-label');
+      const searchInput   = document.getElementById('result-search');
+
+      let currentResultsData = [];
+
+      function getPlaceMedal(place) {
+        if (place === 1 || place === '1' || place === '1st') return '🥇 1st';
+        if (place === 2 || place === '2' || place === '2nd') return '🥈 2nd';
+        if (place === 3 || place === '3' || place === '3rd') return '🥉 3rd';
+        return String(place);
+      }
+
+      function getPlaceBg(place) {
+        if (place === 1 || place === '1' || place === '1st') return '#fffbea;';
+        if (place === 2 || place === '2' || place === '2nd') return '#f8f8f8;';
+        if (place === 3 || place === '3' || place === '3rd') return '#fff7f3;';
+        return '#fff;';
+      }
+
+      function renderResults(results) {
+        currentResultsData = results;
+        if (!listContainer) return;
+
+        if (!results || results.length === 0) {
+          listContainer.innerHTML = `
+            <div style="padding: 2.5rem 1rem; text-align: center; color: #777;">
+              <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #1a1a1a;">No published results yet.</p>
+              <p style="font-size: 0.9rem; margin: 0;">Official results will appear here as soon as they are announced.</p>
+            </div>`;
+          return;
+        }
+
+        let html = '';
+        results.forEach((prog, idx) => {
+          const bodyId = `res-prog-${idx}`;
+          const entries = (prog.results && prog.results.entries) ? prog.results.entries : [];
+          const topEntry = entries[0];
+          const topTeam = topEntry ? (topEntry.groupName || 'Team') : 'Pending';
+          const topScore = topEntry && topEntry.points !== undefined ? topEntry.points : '—';
+
+          let rowsHtml = '';
+          if (entries.length === 0) {
+            rowsHtml = `<tr><td colspan="6" style="text-align:center; padding:18px; color:#888;">No placements entered for this program yet.</td></tr>`;
+          } else {
+            entries.forEach(e => {
+              const bg = getPlaceBg(e.place);
+              const medal = getPlaceMedal(e.place);
+              const groupColor = e.groupColor || '#c0632a';
+              const gradeText = e.grade && e.grade !== '—' ? e.grade : '—';
+              const pointsText = e.points !== undefined ? e.points : '—';
+              const chestText = e.chestNo ? `#${e.chestNo}` : '—';
+
+              rowsHtml += `
+                <tr style="background:${bg}">
+                  <td style="text-align:left; padding:12px 10px; font-size:13px; font-weight:700; white-space:nowrap; border-top:1px solid #f0ebe3;">${medal}</td>
+                  <td style="text-align:left; padding:12px 10px; font-size:13px; font-weight:600; color:#555; font-family:monospace; white-space:nowrap; border-top:1px solid #f0ebe3;">${chestText}</td>
+                  <td style="text-align:left; padding:12px 10px; font-size:14px; font-weight:600; color:#1a1a1a; border-top:1px solid #f0ebe3;">${e.studentName || '—'}</td>
+                  <td style="text-align:left; padding:12px 10px; font-size:13px; font-weight:600; color:#1a1a1a; white-space:nowrap; border-top:1px solid #f0ebe3;">
+                    <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${groupColor}; margin-right:6px; vertical-align:middle;"></span>
+                    ${e.groupName || '—'}
+                  </td>
+                  <td style="text-align:center; padding:12px 10px; font-size:13px; font-weight:700; color:#b05a28; border-top:1px solid #f0ebe3;">${gradeText}</td>
+                  <td style="text-align:right; padding:12px 10px; font-size:14px; font-weight:700; color:#1a1a1a; border-top:1px solid #f0ebe3;">${pointsText}</td>
+                </tr>`;
+            });
+          }
+
+          html += `
+            <div class="prog-result-item" data-program="${prog.name || ''}" data-category="${prog.category || ''}" data-index="${idx}">
+              <button class="prog-result-header" aria-expanded="false" aria-controls="${bodyId}">
+                <div class="prog-header-left">
+                  <span class="prog-name">${prog.name || 'Program'}</span>
+                  <span class="prog-cat-badge">${prog.category || prog.type || 'General'}</span>
+                </div>
+                <div class="prog-header-right">
+                  <span class="prog-top-team">🏆 ${topTeam}</span>
+                  <span class="prog-score-pill">Top points: ${topScore}</span>
+                  <span class="prog-toggle-icon" aria-hidden="true">+</span>
+                </div>
+              </button>
+              <div class="prog-result-body" id="${bodyId}" hidden>
+                <div class="prog-table-wrap" role="region" tabindex="0">
+                  <table style="width:100%; border-collapse:collapse; table-layout:fixed; background:#fff; margin:0; border:1px solid rgba(0,0,0,0.08); border-radius:8px; overflow:hidden;">
+                    <colgroup>
+                      <col style="width:14%;">
+                      <col style="width:16%;">
+                      <col style="width:28%;">
+                      <col style="width:18%;">
+                      <col style="width:11%;">
+                      <col style="width:13%;">
+                    </colgroup>
+                    <thead>
+                      <tr style="background:#f5f0e8;">
+                        <th style="text-align:left; padding:10px 10px; font-size:11px; font-weight:700; text-transform:uppercase; color:#6b5744; border-bottom:1px solid #e5ded5; white-space:nowrap;">Award</th>
+                        <th style="text-align:left; padding:10px 10px; font-size:11px; font-weight:700; text-transform:uppercase; color:#6b5744; border-bottom:1px solid #e5ded5; white-space:nowrap;">Chest No.</th>
+                        <th style="text-align:left; padding:10px 10px; font-size:11px; font-weight:700; text-transform:uppercase; color:#6b5744; border-bottom:1px solid #e5ded5;">Student</th>
+                        <th style="text-align:left; padding:10px 10px; font-size:11px; font-weight:700; text-transform:uppercase; color:#6b5744; border-bottom:1px solid #e5ded5;">Team</th>
+                        <th style="text-align:center; padding:10px 10px; font-size:11px; font-weight:700; text-transform:uppercase; color:#6b5744; border-bottom:1px solid #e5ded5;">Grade</th>
+                        <th style="text-align:right; padding:10px 10px; font-size:11px; font-weight:700; text-transform:uppercase; color:#6b5744; border-bottom:1px solid #e5ded5;">Points</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${rowsHtml}
+                    </tbody>
+                  </table>
+                </div>
+                <div class="prog-result-actions">
+                  <button class="prog-download-btn" data-index="${idx}" aria-label="Download ${prog.name} poster">⬇ Download Poster</button>
+                </div>
+              </div>
+            </div>`;
+        });
+
+        listContainer.innerHTML = html;
+      }
+
+      function renderLeaderboard(leaderboard) {
+        if (!leaderboard || leaderboard.length === 0) return;
+        const standingsTable = document.querySelector('.standings table tbody');
+        const statusPill     = document.querySelector('.scores-section .status-pill');
+        const standingsFoot  = document.querySelector('.standings-foot');
+
+        if (statusPill) {
+          statusPill.innerHTML = '<span aria-hidden="true" style="color:#28a745;">●</span> Live Standings';
+          statusPill.style.background = '#eaf7ee';
+          statusPill.style.color = '#1e7e34';
+        }
+
+        if (standingsTable) {
+          let rows = '';
+          leaderboard.forEach(item => {
+            const teamName  = item.group ? item.group.name : 'Team';
+            const teamColor = item.group && item.group.color ? item.group.color : '#c0632a';
+            const points    = item.totalPoints !== undefined ? item.totalPoints : 0;
+            const rankLabel = item.rank === 1 ? '🥇 1' : item.rank === 2 ? '🥈 2' : item.rank === 3 ? '🥉 3' : String(item.rank);
+
+            rows += `
+              <tr style="background:${item.rank === 1 ? '#fffbea' : '#fff'}; border-bottom:1px solid #f0ebe3;">
+                <td style="padding:14px 18px; font-weight:700; font-size:14px; color:#1a1a1a;">${rankLabel}</td>
+                <td style="padding:14px 18px; font-weight:700; font-size:14px; color:#1a1a1a;">
+                  <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${teamColor}; margin-right:8px; vertical-align:middle;"></span>
+                  ${teamName}
+                </td>
+                <td style="padding:14px 18px; text-align:right; font-weight:700; font-size:15px; color:#1a1a1a;">${points} pts</td>
+              </tr>`;
+          });
+          standingsTable.innerHTML = rows;
+        }
+
+        if (standingsFoot) {
+          standingsFoot.textContent = 'Official team standings updated in real time.';
+        }
+      }
+
+      /* Accordion click listener */
+      if (listContainer) {
+        listContainer.addEventListener('click', function (e) {
+          const btn = e.target.closest('.prog-result-header');
+          if (!btn) return;
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          const bodyId   = btn.getAttribute('aria-controls');
+          const body     = document.getElementById(bodyId);
+          btn.setAttribute('aria-expanded', String(!expanded));
+          if (body) body.hidden = expanded;
+        });
+
+        /* Dynamic SVG Poster download */
+        listContainer.addEventListener('click', function (e) {
+          const dlBtn = e.target.closest('.prog-download-btn');
+          if (!dlBtn) return;
+          e.stopPropagation();
+
+          const idx = parseInt(dlBtn.dataset.index, 10);
+          const prog = currentResultsData[idx] || { name: 'Program Results' };
+          const progName = prog.name || 'Program Results';
+          const entries = (prog.results && prog.results.entries) ? prog.results.entries : [];
+
+          const first  = entries.find(x => x.place === 1) || { studentName: '—', groupName: '—', chestNo: '—', points: '—' };
+          const second = entries.find(x => x.place === 2) || { studentName: '—', groupName: '—', chestNo: '—', points: '—' };
+          const third  = entries.find(x => x.place === 3) || { studentName: '—', groupName: '—', chestNo: '—', points: '—' };
+
+          dlBtn.classList.add('downloading');
+          dlBtn.textContent = '⏳ Preparing…';
+
+          setTimeout(function () {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="460" font-family="'Segoe UI', Roboto, sans-serif">
+  <rect width="640" height="460" fill="#fdf5ec"/>
+  <rect x="0" y="0" width="640" height="10" fill="#c0632a"/>
+  <rect x="0" y="450" width="640" height="10" fill="#c0632a"/>
+  <text x="320" y="55" text-anchor="middle" font-size="13" fill="#b05a28" font-weight="700" letter-spacing="3">COGNIZANCE ARTS FEST '26</text>
+  <text x="320" y="105" text-anchor="middle" font-size="30" fill="#1a1a1a" font-weight="800">${progName}</text>
+  <text x="320" y="135" text-anchor="middle" font-size="13" fill="#7a6b5a">Official Results · Cognizance Arts Fest '26</text>
+  <line x1="60" y1="160" x2="580" y2="160" stroke="#e3d8c8" stroke-width="1"/>
+
+  <!-- 1st -->
+  <rect x="70" y="180" width="500" height="58" rx="8" fill="#fffbea" stroke="#ecd8a0"/>
+  <text x="100" y="216" font-size="18" font-weight="700" fill="#b05a28">🥇 1st</text>
+  <text x="180" y="215" font-size="16" font-weight="700" fill="#1a1a1a">${first.studentName} (#${first.chestNo || '—'})</text>
+  <text x="460" y="215" font-size="14" font-weight="600" fill="#555">${first.groupName || '—'}</text>
+  <text x="545" y="215" font-size="15" font-weight="700" fill="#c0632a" text-anchor="end">${first.points !== undefined ? first.points + ' pts' : ''}</text>
+
+  <!-- 2nd -->
+  <rect x="70" y="250" width="500" height="58" rx="8" fill="#ffffff" stroke="#e0e0e0"/>
+  <text x="100" y="286" font-size="18" font-weight="700" fill="#666666">🥈 2nd</text>
+  <text x="180" y="285" font-size="16" font-weight="700" fill="#1a1a1a">${second.studentName} (#${second.chestNo || '—'})</text>
+  <text x="460" y="285" font-size="14" font-weight="600" fill="#555">${second.groupName || '—'}</text>
+  <text x="545" y="285" font-size="15" font-weight="700" fill="#666" text-anchor="end">${second.points !== undefined ? second.points + ' pts' : ''}</text>
+
+  <!-- 3rd -->
+  <rect x="70" y="320" width="500" height="58" rx="8" fill="#fff7f3" stroke="#f0d5c8"/>
+  <text x="100" y="356" font-size="18" font-weight="700" fill="#a05530">🥉 3rd</text>
+  <text x="180" y="355" font-size="16" font-weight="700" fill="#1a1a1a">${third.studentName} (#${third.chestNo || '—'})</text>
+  <text x="460" y="355" font-size="14" font-weight="600" fill="#555">${third.groupName || '—'}</text>
+  <text x="545" y="355" font-size="15" font-weight="700" fill="#a05530" text-anchor="end">${third.points !== undefined ? third.points + ' pts' : ''}</text>
+
+  <text x="320" y="420" text-anchor="middle" font-size="11" fill="#999">Cognizance Arts Fest · Malathul Badriyya Campus</text>
+</svg>`;
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url  = URL.createObjectURL(blob);
+            const a    = document.createElement('a');
+            a.href     = url;
+            a.download = progName.replace(/\s+/g, '-').toLowerCase() + '-results-poster.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            dlBtn.classList.remove('downloading');
+            dlBtn.textContent = '✓ Downloaded';
+            setTimeout(function () { dlBtn.textContent = '⬇ Download Poster'; }, 3000);
+          }, 800);
+        });
+      }
+
+      /* Live Search filtering */
+      if (searchInput) {
+        searchInput.disabled = false;
+        searchInput.placeholder = 'Search programs or categories…';
+        searchInput.addEventListener('input', function () {
+          const q = this.value.trim().toLowerCase();
+          if (!listContainer) return;
+          listContainer.querySelectorAll('.prog-result-item').forEach(function (item) {
+            const prog = (item.dataset.program || '').toLowerCase();
+            const cat  = (item.dataset.category || '').toLowerCase();
+            item.style.display = (!q || prog.includes(q) || cat.includes(q)) ? '' : 'none';
+          });
+        });
+      }
+
+      /* Initial Fetch from Convex */
+      async function fetchConvexData() {
+        let data = null;
+        try {
+          const res = await fetch(PROD_API);
+          if (res.ok) {
+            data = await res.json();
+          }
+        } catch (err) {
+          console.warn('Prod Convex API unavailable, trying dev...', err);
+        }
+
+        // If production has 0 published results, fall back to dev endpoint
+        if (!data || !data.results || data.results.length === 0) {
+          try {
+            const resDev = await fetch(DEV_API);
+            if (resDev.ok) {
+              const devData = await resDev.json();
+              if (devData && devData.results && devData.results.length > 0) {
+                data = devData;
+              }
+            }
+          } catch (err) {
+            console.warn('Dev Convex API fetch error:', err);
+          }
+        }
+
+        if (data) {
+          renderResults(data.results || []);
+          if (data.leaderboard) {
+            renderLeaderboard(data.leaderboard);
+          }
+        } else {
+          renderResults([]);
+        }
+      }
+
+      fetchConvexData();
+    })();
+  </script>
 </body>
 
 </html>

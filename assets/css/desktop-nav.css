@@ -1,0 +1,73 @@
+/* ============================================================
+   Desktop Inline Nav — show links, hide hamburger on wide screens
+   ============================================================ */
+
+/* Desktop: show inline nav, hide hamburger */
+@media (min-width: 761px) {
+  .desktop-nav {
+    display: flex !important;
+    align-items: center;
+    gap: 2rem;
+    margin-left: auto;
+    align-self: flex-start;
+    margin-top: 12px;
+  }
+
+  .desktop-nav a {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1a1a1a !important;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    position: relative;
+    padding-bottom: 2px;
+    transition: color 0.15s;
+  }
+
+  .desktop-nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: #c0632a;
+    transition: width 0.2s ease;
+  }
+
+  .desktop-nav a:hover {
+    color: #c0632a !important;
+  }
+
+  .desktop-nav a:hover::after,
+  .desktop-nav a.current::after {
+    width: 100%;
+  }
+
+  /* Hide hamburger on desktop */
+  .site-menu-btn {
+    display: none !important;
+  }
+
+  /* Also hide the drawer backdrop and drawer themselves on desktop */
+  .site-menu-backdrop,
+  .site-menu-drawer {
+    display: none !important;
+  }
+}
+
+/* Mobile: hide inline nav, show hamburger as before */
+@media (max-width: 760px) {
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .site-menu-btn {
+    display: inline-flex !important;
+  }
+
+  .site-menu-backdrop,
+  .site-menu-drawer {
+    display: block !important;
+  }
+}

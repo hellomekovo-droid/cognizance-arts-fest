@@ -15,3 +15,7 @@ Thumbs.db
 # Design exploration, raw source files, and intermediate scratch assets
 assets/raw/
 assets/images/hero/hero-bg-*.png
+
+# Agent files
+.agents/
+
