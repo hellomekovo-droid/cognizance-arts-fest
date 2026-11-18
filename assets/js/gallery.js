@@ -30,10 +30,29 @@
       height: 1706
     }
   ];
-  const configuredPhotoItems = window.COGNIZANCE_GALLERY_PHOTOS;
-  const photoItems = Array.isArray(configuredPhotoItems)
-    ? configuredPhotoItems.filter(item => item && typeof item.src === 'string' && item.src.trim())
-    : fallbackPhotoItems;
+  async function bootstrapGallery() {
+    let items = fallbackPhotoItems;
+
+    if (Array.isArray(window.COGNIZANCE_GALLERY_PHOTOS) && window.COGNIZANCE_GALLERY_PHOTOS.length > 0) {
+      items = window.COGNIZANCE_GALLERY_PHOTOS.filter(item => item && typeof item.src === 'string' && item.src.trim());
+    } else if (window.CognizanceAPI && window.CognizanceAPI.isSupabaseConfigured()) {
+      try {
+        const livePhotos = await window.CognizanceAPI.fetchGalleryPhotos();
+        if (Array.isArray(livePhotos) && livePhotos.length > 0) {
+          items = livePhotos.map(p => ({
+            src: p.image_url,
+            alt: p.alt_text || '',
+            width: p.width || 1024,
+            height: p.height || 682
+          }));
+        }
+      } catch (err) {
+        console.warn('[Cognizance Gallery] Could not load live photos, falling back to defaults:', err);
+      }
+    }
+
+    initGalleryCarousel(items);
+  }
 
   function initGalleryCarousel(items) {
     const carousel = document.querySelector('.gallery-carousel');
@@ -445,5 +464,5 @@
     measure();
   }
 
-  initGalleryCarousel(photoItems);
+  bootstrapGallery();
 })();

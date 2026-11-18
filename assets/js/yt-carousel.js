@@ -5,11 +5,51 @@
    ===================================================================== */
 'use strict';
 
-(function init3DCoverflow() {
-  const stage = document.getElementById('yt-stage');
-  const prevBtn = document.getElementById('yt-prev');
-  const nextBtn = document.getElementById('yt-next');
-  if (!stage) return;
+(function setupCoverflow() {
+  async function bootstrapCoverflow() {
+    const stage = document.getElementById('yt-stage');
+    if (!stage) return;
+
+    if (window.CognizanceAPI && window.CognizanceAPI.isSupabaseConfigured()) {
+      try {
+        const liveVideos = await window.CognizanceAPI.fetchVideos();
+        if (Array.isArray(liveVideos) && liveVideos.length > 0) {
+          stage.innerHTML = '';
+          liveVideos.forEach((vid, i) => {
+            const card = document.createElement('a');
+            card.className = `yt-card ${i === 0 ? 'is-center' : 'is-right-hidden'}`;
+            card.href = vid.youtube_url;
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+            card.dataset.videoId = vid.video_id;
+            card.dataset.index = String(i);
+            card.setAttribute('aria-label', `Play ${vid.title || 'video'}`);
+
+            card.innerHTML = `
+              <div class="yt-card__thumb">
+                <img src="${vid.thumbnail_url || `https://img.youtube.com/vi/${vid.video_id}/maxresdefault.jpg`}" 
+                     alt="${vid.title || 'Video highlight'}" 
+                     width="1280" height="720" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
+                <span class="yt-card__play" aria-hidden="true">
+                  <svg viewBox="0 0 68 48" width="68" height="48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24 27 14v20" fill="white"/></svg>
+                </span>
+              </div>
+            `;
+            stage.appendChild(card);
+          });
+        }
+      } catch (err) {
+        console.warn('[Cognizance Videos] Could not load live videos, keeping default videos:', err);
+      }
+    }
+
+    init3DCoverflow(stage);
+  }
+
+  function init3DCoverflow(stage) {
+    const prevBtn = document.getElementById('yt-prev');
+    const nextBtn = document.getElementById('yt-next');
+    if (!stage) return;
 
   const cards = [...stage.querySelectorAll('.yt-card')];
   const totalCards = cards.length;
@@ -177,6 +217,9 @@
   stage.addEventListener('focusout', () => startAutoPlay());
 
   // Initialize Coverflow state
-  updateCoverflow();
-  startAutoPlay();
+    updateCoverflow();
+    startAutoPlay();
+  }
+
+  bootstrapCoverflow();
 })();

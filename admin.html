@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cognizance Live Media Admin</title>
+  <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gayathri:wght@700&family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="adm-header">
+    <div class="adm-brand">
+      <span class="adm-badge">Live Admin</span>
+      <h1 class="adm-title">COGNIZANCE '25</h1>
+    </div>
+    <div class="adm-header-actions">
+      <a href="index.html" class="adm-link" target="_blank" rel="noopener noreferrer">
+        <span>View Live Site</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      </a>
+      <button id="adm-logout-btn" class="adm-btn-logout" hidden>Logout</button>
+    </div>
+  </header>
+
+  <!-- Lockscreen / Passcode Check -->
+  <main id="adm-lockscreen" class="adm-lockscreen">
+    <div class="adm-lock-card">
+      <div class="adm-lock-icon">🔒</div>
+      <h2>Organizer Access</h2>
+      <p style="color: var(--adm-text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Enter the Admin Password to manage festival photos and video highlights.</p>
+      
+      <input type="password" id="adm-pin-input" class="adm-input" placeholder="Enter Password..." autocomplete="current-password">
+      <p id="adm-pin-error" style="color: var(--adm-danger); font-size: 0.85rem; margin-bottom: 0.5rem;" hidden></p>
+      <button id="adm-pin-btn" class="adm-btn">Unlock Admin Portal</button>
+    </div>
+  </main>
+
+  <!-- Dashboard Container -->
+  <main id="adm-dashboard" class="adm-container" hidden>
+    <div id="adm-status-alert" class="adm-alert" hidden></div>
+
+    <!-- Navigation Tabs -->
+    <nav class="adm-tabs" role="tablist">
+      <button class="adm-tab-btn active" data-target="tab-photos">
+        📸 Gallery Photos (<span id="adm-photo-count">0</span>)
+      </button>
+      <button class="adm-tab-btn" data-target="tab-videos">
+        🎬 Video Highlights (<span id="adm-video-count">0</span>)
+      </button>
+      <button class="adm-tab-btn" data-target="tab-setup">
+        ⚙️ Database Setup
+      </button>
+    </nav>
+
+    <!-- Tab 1: Photos -->
+    <section id="tab-photos" class="adm-tab-pane">
+      <div class="adm-card">
+        <h3 style="margin-bottom: 0.75rem;">Upload New Photos</h3>
+        <p style="color: var(--adm-text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+          Drag & drop photos or click to select from your phone/computer. Photos will immediately appear in the website's gallery.
+        </p>
+
+        <div id="adm-dropzone" class="adm-dropzone">
+          <span class="adm-dropzone-icon">📁</span>
+          <strong>Click to choose photos or drag here</strong>
+          <p style="color: var(--adm-text-muted); font-size: 0.8rem; margin-top: 0.25rem;">Supports JPG, PNG, WebP (Multiple files supported)</p>
+          <input type="file" id="adm-file-input" accept="image/*" multiple hidden>
+        </div>
+
+        <input type="text" id="adm-photo-caption" class="adm-input" placeholder="Optional caption or event tag for this batch...">
+
+        <div id="adm-upload-progress" class="adm-progress">
+          <div id="adm-progress-bar" class="adm-progress-bar"></div>
+        </div>
+      </div>
+
+      <div class="adm-section-header">
+        <h2>Live Gallery Photos</h2>
+      </div>
+
+      <div id="adm-gallery-grid" class="adm-grid"></div>
+    </section>
+
+    <!-- Tab 2: Videos -->
+    <section id="tab-videos" class="adm-tab-pane" hidden>
+      <div class="adm-card">
+        <h3 style="margin-bottom: 0.75rem;">Add YouTube Video Highlight</h3>
+        <p style="color: var(--adm-text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+          Paste any YouTube URL (standard link, mobile share link, or Shorts). The video ID and HD cover thumbnail will be extracted automatically.
+        </p>
+
+        <input type="url" id="adm-yt-url" class="adm-input" placeholder="Paste YouTube Link (e.g. https://youtu.be/AHa0LpXiMnQ)...">
+        <input type="text" id="adm-yt-title" class="adm-input" placeholder="Video Title (e.g. Grand Finale Highlights)...">
+
+        <div id="adm-yt-preview" class="adm-yt-preview" hidden>
+          <img id="adm-yt-preview-thumb" src="" alt="Thumbnail Preview">
+          <div>
+            <strong id="adm-yt-preview-title"></strong>
+            <p style="color: var(--adm-text-muted); font-size: 0.8rem;">Ready to be added to 3D Coverflow carousel</p>
+          </div>
+        </div>
+
+        <button id="adm-yt-add-btn" class="adm-btn" style="margin-top: 1rem;" disabled>Add Video to Site</button>
+      </div>
+
+      <div class="adm-section-header">
+        <h2>Active Video Highlights</h2>
+      </div>
+
+      <div id="adm-video-grid" class="adm-grid"></div>
+    </section>
+
+    <!-- Tab 3: Setup & Instructions -->
+    <section id="tab-setup" class="adm-tab-pane" hidden>
+      <div class="adm-card">
+        <h3 style="margin-bottom: 0.75rem;">Connecting Your Supabase Database</h3>
+        <ol style="padding-left: 1.25rem; line-height: 1.8; color: var(--adm-text); font-size: 0.95rem;">
+          <li>Create a free project at <a href="https://supabase.com" target="_blank" rel="noopener noreferrer" style="color: var(--adm-gold);">supabase.com</a>.</li>
+          <li>Go to <strong>SQL Editor</strong> in your Supabase Dashboard.</li>
+          <li>Copy and paste the entire script from <code>supabase_setup.sql</code> located in your project root, then click <strong>Run</strong>.</li>
+          <li>Go to <strong>Project Settings -> API</strong>, and copy your <strong>Project URL</strong> and <strong>anon public API key</strong>.</li>
+          <li>Open <code>assets/js/supabase-config.js</code> in this project and paste your URL and Anon Key.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <!-- Supabase CDN and Client Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-client.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
