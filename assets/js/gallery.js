@@ -84,11 +84,14 @@
     let motionPosition = 0;
     let settleTimer = 0;
     let scrollEndTimer = 0;
-    let hovered = false;
     let focused = false;
     let userInteracting = false;
     let pointerActive = false;
     let touchActive = false;
+    let isPointerDown = false;
+    let pointerStartX = 0;
+    let pointerStartScroll = 0;
+    let isDragging = false;
     let inView = !('IntersectionObserver' in window);
     let initialized = false;
     let isGlidingScroll = false;
@@ -204,8 +207,19 @@
       updateControls();
     }
 
+    function isKeyboardFocused() {
+      if (!focused) return false;
+      const active = document.activeElement;
+      if (!active || !carousel.contains(active)) return false;
+      try {
+        return active.matches(':focus-visible');
+      } catch (_) {
+        return false;
+      }
+    }
+
     function canAutoplay() {
-      return !motion.matches && !hovered && !focused && !userInteracting &&
+      return !motion.matches && !isKeyboardFocused() && !userInteracting &&
         inView && !document.hidden && hasSteps();
     }
 
@@ -313,18 +327,13 @@
       }
     });
 
-    carousel.addEventListener('pointerenter', event => {
-      if (event.pointerType === 'touch') return;
-      hovered = true;
-      stopGliding();
-    });
-
-    carousel.addEventListener('pointerleave', () => {
-      hovered = false;
-      schedule();
-    });
-
-    carousel.addEventListener('focusin', () => {
+    carousel.addEventListener('focusin', event => {
+      if (isPointerDown || pointerActive || touchActive) return;
+      try {
+        if (event.target && event.target.matches && !event.target.matches(':focus-visible')) {
+          return;
+        }
+      } catch (_) {}
       focused = true;
       stopGliding();
     });
@@ -334,45 +343,90 @@
       schedule();
     });
 
-    // Handle touch & pointer events cleanly without hijacking browser scrolling
-    carousel.addEventListener('pointerdown', event => {
+    function handlePress(event) {
+      if (event && event.button !== undefined && event.button !== 0) return;
+
+      isPointerDown = true;
       pointerActive = true;
-      if (event.pointerType === 'touch') {
-        touchActive = true;
-        hovered = false;
+      touchActive = event ? event.pointerType === 'touch' : false;
+      userInteracting = true;
+      isDragging = false;
+      pointerStartX = (event && typeof event.clientX === 'number') ? event.clientX : 0;
+      pointerStartScroll = track.scrollLeft;
+
+      clearSettleTimer();
+      stopGliding();
+
+      if (event && event.pointerType === 'mouse' && event.pointerId !== undefined) {
+        try {
+          track.setPointerCapture(event.pointerId);
+        } catch (_) {}
       }
-      userInteracting = true;
+    }
+
+    function handleRelease(event) {
+      if (!isPointerDown && !pointerActive && !touchActive && !userInteracting) return;
+
+      if (event && event.pointerType === 'mouse' && event.pointerId !== undefined) {
+        try {
+          if (track.hasPointerCapture && track.hasPointerCapture(event.pointerId)) {
+            track.releasePointerCapture(event.pointerId);
+          }
+        } catch (_) {}
+      }
+
+      isPointerDown = false;
+      pointerActive = false;
+      touchActive = false;
+      isDragging = false;
+      userInteracting = false;
+      focused = false;
       clearSettleTimer();
       stopGliding();
+
+      // If track was focused due to mouse/touch interaction rather than keyboard tab, blur it
+      if (document.activeElement === track) {
+        try {
+          if (!track.matches || !track.matches(':focus-visible')) {
+            track.blur();
+          }
+        } catch (_) {
+          track.blur();
+        }
+      }
+
+      // Immediately sync to the exact current position and start motion without delay
+      normalizeLoopPosition();
+      motionPosition = track.scrollLeft;
+      syncPosition();
+      schedule();
+    }
+
+    // Touch & pointer interaction: stop immediately on touch/click
+    carousel.addEventListener('pointerdown', handlePress, { passive: true });
+    carousel.addEventListener('touchstart', handlePress, { passive: true });
+
+    // Desktop mouse drag support
+    carousel.addEventListener('pointermove', event => {
+      if (!isPointerDown) return;
+      if (event.pointerType === 'mouse') {
+        const dx = event.clientX - pointerStartX;
+        if (Math.abs(dx) > 2) {
+          isDragging = true;
+        }
+        if (isDragging) {
+          track.scrollLeft = pointerStartScroll - dx;
+          motionPosition = track.scrollLeft;
+        }
+      }
     }, { passive: true });
 
-    carousel.addEventListener('pointerup', () => {
-      pointerActive = false;
-      touchActive = false;
-    }, { passive: true });
-
-    carousel.addEventListener('pointercancel', () => {
-      pointerActive = false;
-      touchActive = false;
-    }, { passive: true });
-
-    carousel.addEventListener('touchstart', () => {
-      touchActive = true;
-      hovered = false;
-      userInteracting = true;
-      clearSettleTimer();
-      stopGliding();
-    }, { passive: true });
-
-    carousel.addEventListener('touchend', () => {
-      touchActive = false;
-      pointerActive = false;
-    }, { passive: true });
-
-    carousel.addEventListener('touchcancel', () => {
-      touchActive = false;
-      pointerActive = false;
-    }, { passive: true });
+    // Release triggers immediately on window so releasing outside carousel is never lost
+    window.addEventListener('pointerup', handleRelease, { passive: true });
+    window.addEventListener('pointercancel', handleRelease, { passive: true });
+    window.addEventListener('touchend', handleRelease, { passive: true });
+    window.addEventListener('touchcancel', handleRelease, { passive: true });
+    window.addEventListener('blur', handleRelease);
 
     // Distinguish programmatic glide scroll from genuine user swipe/touchpad scroll
     track.addEventListener('scroll', () => {
@@ -381,23 +435,36 @@
         return;
       }
 
-      // Real user scroll (touch swipe, trackpad, mouse wheel, or scrollbar drag)
-      userInteracting = true;
-      stopGliding();
+      // If user is currently touching or holding the mouse down, keep motion stopped
+      if (isPointerDown || pointerActive || touchActive) {
+        userInteracting = true;
+        stopGliding();
+        clearSettleTimer();
+        return;
+      }
+
+      // Standalone scroll (trackpad gesture, mouse wheel, or mobile inertial coasting)
+      motionPosition = track.scrollLeft;
       clearSettleTimer();
 
-      // Debounce scroll settle to let mobile inertia/momentum finish completely
+      // Short debounce (60ms) after inertia/trackpad stops to immediately resume smooth glide
       scrollEndTimer = window.setTimeout(() => {
-        if (pointerActive || touchActive) return;
+        if (isPointerDown || pointerActive || touchActive) return;
         normalizeLoopPosition();
         motionPosition = track.scrollLeft;
         syncPosition();
         userInteracting = false;
         schedule();
-      }, 750);
+      }, 60);
     }, { passive: true });
 
-    document.addEventListener('visibilitychange', schedule);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopGliding();
+      } else {
+        handleRelease();
+      }
+    });
 
     motion.addEventListener('change', () => {
       stopGliding();
